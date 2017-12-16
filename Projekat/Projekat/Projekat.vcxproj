@@ -112,10 +112,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Format3.c" />
+    <ClCompile Include="Format4.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="osi.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Format3.h" />
+    <ClInclude Include="Format4.h" />
     <ClInclude Include="osi.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

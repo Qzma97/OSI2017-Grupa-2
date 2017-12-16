@@ -3,8 +3,7 @@
 
 #include "Format4.h"
 
-//void insert(NODE**, RACUN*);
-void format3();
-//void print();
+RACUN format3(FILE*,char*);
+int countf3(FILE*);
 
 #endif // FORMAT3_H

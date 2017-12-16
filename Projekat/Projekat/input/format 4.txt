@@ -1,4 +1,4 @@
-Kupac: ABC
+Kupac: Mirko
 Datum: 24/10/2017
 		
 	      OSI Market

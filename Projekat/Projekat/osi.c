@@ -3,6 +3,8 @@
 #include <string.h>
 #include <Windows.h>
 #include "osi.h"
+#include "Format4.h"
+#include "Format3.h"
 
 
 int prijava(KORISNIK* niz, int n)
@@ -23,6 +25,8 @@ int prijava(KORISNIK* niz, int n)
 			WIN32_FIND_DATA findFileData;
 			HANDLE hFind;
 			FILE* f,*f1=0;
+			NODE* head=NULL;
+			RACUN racun;
 			char gk=0,*c = "./input/",*g="./memory/";
 			hFind = FindFirstFile("./input/*", &findFileData);
 			if (hFind != INVALID_HANDLE_VALUE)
@@ -55,12 +59,12 @@ int prijava(KORISNIK* niz, int n)
 							//format 2 obrada
 							break;
 						case 3:
-							printf("Format 3\n");
-							//format 3 obrada
+							racun = format3(f, e);
+							insert(&head, &racun);
 							break;
 						case 4:
-							printf("Format 4\n");
-							//format 4 obrada
+							racun=format4(f,e);
+							insert(&head, &racun);
 							break;
 						default: 
 							printf("Format 5\n");

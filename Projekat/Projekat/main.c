@@ -29,19 +29,20 @@ int main()
 		printf("PRIJAVA-1\n");
 		printf("REGISTRACIJA-2\n");
 		printf("-------------------------------------------------------------------------------------------------\n");
-		int i, d = 0;
+		char i;
+		int d = 0;
 		do
 		{
-			scanf("%d", &i);
-			if (i != 1 && i != 2)
+			scanf("%c", &i);
+			if (i != '1' && i != '2')
 				printf("Nepostojeca opcija!\n");
-		} while (i != 1 && i != 2);
-		if (i == 1)
+		} while (i != '1' && i != '2');
+		if (i == '1')
 			do {
 				d = prijava(niz, n);
 			} while (d == 0);
 
-		else if (i == 2)
+		else if (i == '2')
 			registracija(niz, n, dat);
 	}
 	else
