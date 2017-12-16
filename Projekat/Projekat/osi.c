@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <Windows.h>
 #include "osi.h"
 
 
@@ -18,6 +19,68 @@ int prijava(KORISNIK* niz, int n)
 		printf("IZABERITE OPCIJU:\n");
 		if (k.tip == 0)
 		{
+			int format = 0;
+			WIN32_FIND_DATA findFileData;
+			HANDLE hFind;
+			FILE* f,*f1=0;
+			char gk=0,*c = "./input/",*g="./memory/";
+			hFind = FindFirstFile("./input/*", &findFileData);
+			if (hFind != INVALID_HANDLE_VALUE)
+			{
+				do {
+					char*d = (char*)calloc(strlen(findFileData.cFileName), sizeof(char));
+					strcpy(d, findFileData.cFileName);
+					char*e = (char*)calloc(strlen(d) + strlen(c), sizeof(char));
+					strcat(e, c);
+					strcat(e, d);
+					f = fopen(e, "r");
+					if (f != NULL)
+					{
+						if (findFileData.cFileName[strlen(findFileData.cFileName) - 1] == 'v'&&findFileData.cFileName[strlen(findFileData.cFileName) - 2] == 's'&&findFileData.cFileName[strlen(findFileData.cFileName) - 3] == 'c')
+							format = 5;
+						else
+						{
+							format=chechkFormat(f);
+							fclose(f);
+							f = fopen(e, "r");
+						}
+						switch (format) 
+						{
+						case 1:
+							printf("Format 1\n");
+							//format 1 obrada
+							break; 
+						case 2:
+							printf("Format 2\n");
+							//format 2 obrada
+							break;
+						case 3:
+							printf("Format 3\n");
+							//format 3 obrada
+							break;
+						case 4:
+							printf("Format 4\n");
+							//format 4 obrada
+							break;
+						default: 
+							printf("Format 5\n");
+							//format 5 obrada
+						}
+					/*	char*e = (char*)calloc(strlen(d) + strlen(g), sizeof(char));
+						strcat(e, g);
+						strcat(e, d);
+						f1 = fopen(e, "w");
+						while ((gk = fgetc(f)) != EOF)
+						fputc(gk, f1);
+						fclose(f1);*/
+
+						fclose(f);
+					}
+				} while (FindNextFile(hFind, &findFileData) != 0);
+
+				FindClose(hFind);
+			}
+
 			printf("\t1.Pregled svih podataka za odredjenog kupca\n");
 			printf("\t2.Pregled svih podataka za odredjeni proizvod\n");
 			printf("\t3.Pregled ukupne prodaje za odredjeni mjesec\n");
@@ -74,11 +137,11 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 	strcpy(temp.korisnicko_ime, pom1);
 	do
 	{
-		printf("\tPIN:");
+		printf("\tPIN(4 broja):");
 		scanf("%s", pom2);
 		i = strlen(pom2);
-		for (int i = 0; i < sizeof(pom2) - 1; i++)
-			if (pom2[i] < 48 || pom2[i]>57)
+		for (int j = 0; j < sizeof(pom2) - 1; j++)
+			if (pom2[j] < 48 || pom2[j]>57)
 				i = 5;
 		if (i != 4)
 			printf("PIN se mora sastojati od 4 broja!\n");
@@ -118,4 +181,31 @@ int search_(KORISNIK* niz, int n, char* ime)
 			return 1;
 	}
 	return 0;
+}
+
+int chechkFormat(FILE *f)
+{
+	int n = 7,m=5;
+	char c[36], ignore[1024];
+	fscanf(f, "%6c", c);
+	c[6] = '\0';
+	if (strcmp(c, "Kupac:") == 0)
+	{//format 1 i 4
+
+		while (n--)
+			fgets(ignore, sizeof(ignore), f);
+		if (strcmp(ignore, "---------------------------------------\n") == 0)
+			return 4;
+		else return 1;
+	}
+	else
+	{//format 2 i 3
+		while(m--)
+			fgets(ignore, sizeof(ignore), f);
+		fscanf(f, "%6c", c);
+		c[6] = '\0';
+		if (strcmp(c, "Kupac:") == 0)
+			return 2;
+		else return 3;
+	}
 }
