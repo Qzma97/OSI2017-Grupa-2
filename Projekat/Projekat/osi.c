@@ -5,6 +5,8 @@
 #include "osi.h"
 #include "Format4.h"
 #include "Format3.h"
+#include "Format5.h"
+#include "format1.h"
 
 
 int prijava(KORISNIK* niz, int n)
@@ -51,12 +53,11 @@ int prijava(KORISNIK* niz, int n)
 						switch (format) 
 						{
 						case 1:
-							printf("Format 1\n");
-							//format 1 obrada
+							racun=format1(f, e);
+							insert(&head, &racun);
 							break; 
 						case 2:
-							printf("Format 2\n");
-							//format 2 obrada
+							//sad
 							break;
 						case 3:
 							racun = format3(f, e);
@@ -66,10 +67,15 @@ int prijava(KORISNIK* niz, int n)
 							racun=format4(f,e);
 							insert(&head, &racun);
 							break;
+						case 5:
+							racun = format5(f, e, findFileData.cFileName);
+							insert(&head, &racun);
+							break;
 						default: 
-							printf("Format 5\n");
-							//format 5 obrada
+							break;
 						}
+						fclose(f);
+						f = fopen(e, "r");
 					/*	char*e = (char*)calloc(strlen(d) + strlen(g), sizeof(char));
 						strcat(e, g);
 						strcat(e, d);

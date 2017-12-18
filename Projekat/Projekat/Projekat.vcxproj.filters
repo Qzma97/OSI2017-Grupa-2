@@ -27,6 +27,12 @@
     <ClCompile Include="Format3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="format1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Format5.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osi.h">
@@ -36,6 +42,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Format3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="format1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Format5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
