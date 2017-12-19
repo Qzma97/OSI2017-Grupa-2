@@ -239,3 +239,23 @@ pisi_racun_u_file(memory,r);
 	else
 pisi_racun_u_file(error,r);
 }
+
+void pisi_racun_u_file(FILE *dat,RACUN *r)
+{
+frpintf(dat,"Kupac: %s\n",r->nazivKupca);
+fprintf(dat,"Datum: %s\n",r->datum);
+fprintf(dat,"NAZIV ARTIKLA        SIFRA  KOL    CIJENA UKUPNO\n");
+fprintf(dat,"==================== ====== ====== ====== ======\n");
+int n=(r->brojArtikala);
+for(i=0;i<n;i++)
+{
+fprintf(dat,"%-20s %6d %6.2lf %6.2lf %6.2lf\n",
+r->nizA[i].naziv,r->nizA[i].sifra,r->nizA[i].kolicina,r->nizA[i].cijena,r->nizA[i].ukupno);
+
+}
+fprintf(dat,"==================== ====== ====== ====== ======\n");
+fprintf(dat,"Ukupno: %.2lf\n",r->ukupno);
+fprintf(dat,"PDV: %.2lf\n",r->pdv);
+fprintf(dat,"Ukupno za placanje: %.2lf\n",r->ukupnoPl);
+fprintf(dat,"================================================\n");
+}
