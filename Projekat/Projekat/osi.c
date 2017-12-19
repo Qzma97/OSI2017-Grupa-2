@@ -219,3 +219,23 @@ int chechkFormat(FILE *f)
 		else return 3;
 	}
 }
+
+
+void verifikacija(RACUN *r,FILE *error,FILE *memory)
+{
+int pom=0;
+int n=(r->brojArtikala);
+int i;
+int ukupno=0;
+
+for(i=0;i<n;i++)
+{
+	ukupno+=r->nizA[i].ukupno;
+	if ((r->nizA[i].ukupno)==(r->nizA[i].kolicina*r->nizA[i].cijena)) pom++;
+}
+	
+	if(pom==n && r->ukupno==ukupno)
+pisi_racun_u_file(memory,r);
+	else
+pisi_racun_u_file(error,r);
+}
