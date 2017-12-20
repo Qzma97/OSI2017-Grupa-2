@@ -6,6 +6,8 @@ int trazi_po_artiklu(NODE* head, char* naziv)
 {
 	int count = 0;
 	NODE* temp = head;
+	if (temp == NULL)
+		return 0;
 	while (temp->next != NULL)
 	{
 		int i = 0, n = temp->racun.brojArtikala;
@@ -71,9 +73,11 @@ void brisi_listu(NODE**head)
 
 int trazi_po_kupcu(NODE*head,char*kupac)
 {
-    NODE*p;
+    NODE*p=head;
+	if (p == NULL)
+		return 0;
     int br=0;
-    for(p=head;p!=NULL;p=p->next)
+    for(;p!=NULL;p=p->next)
     {
         if(strcmp(p->racun.kupac,kupac)==0)
             br++;
@@ -83,12 +87,24 @@ int trazi_po_kupcu(NODE*head,char*kupac)
 
 int trazi_po_datumu(NODE*head, char*datum_novi)
 {
-	NODE*p;
+	NODE*p=head;
+	if (p == NULL)
+		return 0;
 	int br = 0;
-	for (p = head; p != NULL; p = p->next)
+	for (; p != NULL; p = p->next)
 	{
 		if (strcmp(p->racun.datum, datum_novi) == 0)
 			br++;
 	}
 	return br;
+}
+
+void insert(NODE** head, RACUN* racun)
+{
+	NODE* newNode = (NODE*)malloc(sizeof(NODE));
+	newNode->racun = *racun;
+	newNode->next = 0;
+	if (*head != 0)
+		newNode->next = *head;
+	*head = newNode;
 }

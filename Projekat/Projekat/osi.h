@@ -7,8 +7,6 @@ typedef struct korisnik
 	char ime[16], prezime[21];
 } KORISNIK;
 
-void pisi_racun_u_file(FILE *,RACUN *)
-void verifikacija(RACUN *,FILE *,FILE *)
 int prijava(KORISNIK*, int);
 int search(KORISNIK*, int, KORISNIK*, char*, char*);
 void registracija(KORISNIK*, int, FILE*);

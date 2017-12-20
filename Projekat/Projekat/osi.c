@@ -3,10 +3,9 @@
 #include <string.h>
 #include <Windows.h>
 #include "osi.h"
-#include "Format4.h"
-#include "Format3.h"
-#include "Format5.h"
-#include "format1.h"
+#include "Formati.h"
+#include "Pretraga.h"
+
 
 
 int prijava(KORISNIK* niz, int n)
@@ -15,12 +14,12 @@ int prijava(KORISNIK* niz, int n)
 	printf("KORISNICKO IME:"); scanf("%s", ime);
 	printf("PIN:"); scanf("%s", pin);
 	KORISNIK k;
-	int d;
+	int d,ispravno=0,neispravno=0;
 	if ((search(niz, n, &k, ime, pin)) == 1)
 	{
 		printf("USPJESNA PRIJAVA!\n");
-		printf("-------------------------------------------------------------------------------------------------\n");
-		printf("IZABERITE OPCIJU:\n");
+		Sleep(1000);
+		system("cls");
 		if (k.tip == 0)
 		{
 			int format = 0;
@@ -39,6 +38,8 @@ int prijava(KORISNIK* niz, int n)
 					char*e = (char*)calloc(strlen(d) + strlen(c), sizeof(char));
 					strcat(e, c);
 					strcat(e, d);
+
+
 					f = fopen(e, "r");
 					if (f != NULL)
 					{
@@ -54,56 +55,130 @@ int prijava(KORISNIK* niz, int n)
 						{
 						case 1:
 							racun=format1(f, e);
-							insert(&head, &racun);
+							if (verifikacija(&racun))
+							{
+								//f = fopen(e, "r");
+								insert(&head, &racun);
+								memory(f, e, findFileData.cFileName);
+								ispravno++;
+							}
+							else
+							{
+								//f = fopen(e, "r");
+								neispravno++;
+								error(f, e, findFileData.cFileName);
+							}
 							break; 
 						case 2:
-							//sad
+							racun = format2(f, e);
+							if (verifikacija(&racun))
+							{
+								//f = fopen(e, "r");
+								insert(&head, &racun);
+								memory(f, e, findFileData.cFileName);
+								ispravno++;
+							}
+							else
+							{
+							//	f = fopen(e, "r");
+								neispravno++;
+								error(f, e, findFileData.cFileName);
+							}
 							break;
 						case 3:
 							racun = format3(f, e);
-							insert(&head, &racun);
+							if (verifikacija(&racun))
+							{
+								//f = fopen(e, "r");
+								insert(&head, &racun);
+								memory(f, e, findFileData.cFileName);
+								ispravno++;
+							}
+							else
+							{
+								//f = fopen(e, "r");
+								neispravno++;
+								error(f, e, findFileData.cFileName);
+							}
 							break;
 						case 4:
 							racun=format4(f,e);
-							insert(&head, &racun);
+							if (verifikacija(&racun))
+							{
+							//	f = fopen(e, "r");
+								insert(&head, &racun);
+								memory(f, e, findFileData.cFileName);
+								ispravno++;
+							}
+							else
+							{
+							//	f = fopen(e, "r");
+								neispravno++;
+								error(f, e, findFileData.cFileName);
+							}
 							break;
 						case 5:
 							racun = format5(f, e, findFileData.cFileName);
-							insert(&head, &racun);
+							if (verifikacija(&racun))
+							{
+								f = fopen(e, "r");
+								insert(&head, &racun);
+								memory(f, e, findFileData.cFileName);
+								ispravno++;
+							}
+							else
+							{
+								f = fopen(e, "r");
+								neispravno++;
+								error(f, e, findFileData.cFileName);
+							}
 							break;
 						default: 
-							break;
+							break;	
 						}
 						fclose(f);
-						f = fopen(e, "r");
-					/*	char*e = (char*)calloc(strlen(d) + strlen(g), sizeof(char));
-						strcat(e, g);
-						strcat(e, d);
-						f1 = fopen(e, "w");
-						while ((gk = fgetc(f)) != EOF)
-						fputc(gk, f1);
-						fclose(f1);*/
-
-						fclose(f);
+						remove(e);
 					}
 				} while (FindNextFile(hFind, &findFileData) != 0);
 
 				FindClose(hFind);
 			}
+			printf("Broj ispravnih racuna: %d\n", ispravno);
+			printf("Broj neispravnih racuna: %d\n", neispravno);
+			int found;
+			char d[3],pom[31] = { 0 };
+			do {
+				printf("-------------------------------------------------------------------------------------------------\n");
+				printf("IZABERITE OPCIJU:\n");
+				printf("-------------------------------------------------------------------------------------------------\n");
+				printf("\t1.Pregled svih podataka za odredjenog kupca\n");
+				printf("\t2.Pregled svih podataka za odredjeni proizvod\n");
+				printf("\t3.Pregled ukupne prodaje za odredjeni mjesec\n");
+				printf("\t0.Izlaz iz programa\n");
+				printf("-------------------------------------------------------------------------------------------------\n");
+				scanf("%s", d);
+				system("cls");
+				if (d[0] == '1');
+				//pregled_kupca();
+				else if (d[0] == '2')
+				{
+					printf("Unesite trazeni proizvod: ");
+					scanf("%s", pom);
+					if (found = trazi_po_artiklu(head, pom))
+					{
+						artikal(head, found, pom);
+					}
+					else
+						printf("Nema trazenog artikla!\n");
+				}
 
-			printf("\t1.Pregled svih podataka za odredjenog kupca\n");
-			printf("\t2.Pregled svih podataka za odredjeni proizvod\n");
-			printf("\t3.Pregled ukupne prodaje za odredjeni mjesec\n");
-			scanf("%d", &d);
-			printf("-------------------------------------------------------------------------------------------------\n");
-			/*if (d == 1)
-			pregled_kupca();
-			else if (d == 2)
-			pregled_proizvoda();
-			else if (d == 3)
-			ukupna_prodaja();
-			else
-			printf("Greska!");*/
+				/*
+				else if (d[0] == '3')
+				ukupna_prodaja();
+				else
+				printf("Greska!");*/
+			} while (d[0] != '0');
+			brisi_listu(&head);
 		}
 		else if (k.tip == 1)
 		{
@@ -218,44 +293,4 @@ int chechkFormat(FILE *f)
 			return 2;
 		else return 3;
 	}
-}
-
-
-void verifikacija(RACUN *r,FILE *error,FILE *memory)
-{
-int pom=0;
-int n=(r->brojArtikala);
-int i;
-int ukupno=0;
-
-for(i=0;i<n;i++)
-{
-	ukupno+=r->nizA[i].ukupno;
-	if ((r->nizA[i].ukupno)==(r->nizA[i].kolicina*r->nizA[i].cijena)) pom++;
-}
-	
-	if(pom==n && r->ukupno==ukupno)
-pisi_racun_u_file(memory,r);
-	else
-pisi_racun_u_file(error,r);
-}
-
-void pisi_racun_u_file(FILE *dat,RACUN *r)
-{
-frpintf(dat,"Kupac: %s\n",r->nazivKupca);
-fprintf(dat,"Datum: %s\n",r->datum);
-fprintf(dat,"NAZIV ARTIKLA        SIFRA  KOL    CIJENA UKUPNO\n");
-fprintf(dat,"==================== ====== ====== ====== ======\n");
-int n=(r->brojArtikala);
-for(i=0;i<n;i++)
-{
-fprintf(dat,"%-20s %6d %6.2lf %6.2lf %6.2lf\n",
-r->nizA[i].naziv,r->nizA[i].sifra,r->nizA[i].kolicina,r->nizA[i].cijena,r->nizA[i].ukupno);
-
-}
-fprintf(dat,"==================== ====== ====== ====== ======\n");
-fprintf(dat,"Ukupno: %.2lf\n",r->ukupno);
-fprintf(dat,"PDV: %.2lf\n",r->pdv);
-fprintf(dat,"Ukupno za placanje: %.2lf\n",r->ukupnoPl);
-fprintf(dat,"================================================\n");
 }
