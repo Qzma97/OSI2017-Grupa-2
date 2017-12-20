@@ -21,16 +21,10 @@
     <ClCompile Include="osi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Format4.c">
+    <ClCompile Include="Formati.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Format3.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="format1.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Format5.c">
+    <ClCompile Include="Pretraga.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,16 +32,10 @@
     <ClInclude Include="osi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Format4.h">
+    <ClInclude Include="Formati.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Format3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="format1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Format5.h">
+    <ClInclude Include="Pretraga.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
