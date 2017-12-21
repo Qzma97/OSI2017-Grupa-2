@@ -209,7 +209,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 
 	KORISNIK temp;
 	char pom1[16], pom2[5];
-	printf("UNESITE PODATKE:\n");
+	printf("UNESITE PODATKE:(Umjesto razmaka koristiti '_')\n\n");
 	int i = 1;
 	do
 	{
