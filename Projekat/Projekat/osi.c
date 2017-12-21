@@ -51,7 +51,7 @@ int prijava(KORISNIK* niz, int n)
 							fclose(f);
 							f = fopen(e, "r");
 						}
-						switch (format) 
+						switch (format)
 						{
 						case 1:
 							racun=format1(f, e);
@@ -68,7 +68,7 @@ int prijava(KORISNIK* niz, int n)
 								neispravno++;
 								error(f, e, findFileData.cFileName);
 							}
-							break; 
+							break;
 						case 2:
 							racun = format2(f, e);
 							if (verifikacija(&racun))
@@ -133,8 +133,8 @@ int prijava(KORISNIK* niz, int n)
 								error(f, e, findFileData.cFileName);
 							}
 							break;
-						default: 
-							break;	
+						default:
+							break;
 						}
 						fclose(f);
 						remove(e);
@@ -209,7 +209,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 
 	KORISNIK temp;
 	char pom1[16], pom2[5];
-	printf("UNESITE PODATKE:(Umjesto razmaka koristiti '_')\n\n");
+	printf("UNESITE PODATKE:\n");
 	int i = 1;
 	do
 	{
@@ -224,8 +224,8 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 	{
 		printf("\tPIN(4 broja):");
 		scanf("%s", pom2);
-		i = strlen(pom2);
-		for (int j = 0; j < sizeof(pom2) - 1; j++)
+		i = strlen(pom2);int j;
+		for ( j = 0; j < sizeof(pom2) - 1; j++)
 			if (pom2[j] < 48 || pom2[j]>57)
 				i = 5;
 		if (i != 4)
@@ -234,6 +234,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 	strcpy(temp.PIN, pom2);
 	printf("\tIme:"); scanf("%s", temp.ime);
 	printf("\tPrezime:"); scanf("%s", temp.prezime);
+	printf("\tEmail adresa:");scanf("%s", temp.email);
 	temp.tip = 0;
 	niz = (KORISNIK *)realloc(niz, (++n) * sizeof(KORISNIK));
 	niz[n - 1] = temp;
@@ -246,7 +247,8 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 
 int search(KORISNIK* niz, int n, KORISNIK *k, char *ime, char *pin)
 {
-	for (int i = 0; i < n; i++)
+    int i;
+	for ( i = 0; i < n; i++)
 	{
 		if ((strcmp(ime, niz[i].korisnicko_ime) == 0) && (strcmp(pin, niz[i].PIN) == 0))
 		{
@@ -260,7 +262,8 @@ int search(KORISNIK* niz, int n, KORISNIK *k, char *ime, char *pin)
 
 int search_(KORISNIK* niz, int n, char* ime)
 {
-	for (int i = 0; i < n; i++)
+    int i;
+	for ( i = 0; i < n; i++)
 	{
 		if ((strcmp(ime, niz[i].korisnicko_ime) == 0))
 			return 1;
