@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <string.h>
 #include "osi.h"
 
 int main()
@@ -29,20 +30,20 @@ int main()
 		printf("PRIJAVA-1\n");
 		printf("REGISTRACIJA-2\n");
 		printf("-------------------------------------------------------------------------------------------------\n");
-		char i;
+		char i[100];
 		int d = 0;
 		do
 		{
-			scanf("%c", &i);
-			if (i != '1' && i != '2')
-				printf("Nepostojeca opcija!\n");
-		} while (i != '1' && i != '2');
-		if (i == '1')
+			scanf("%s", i);
+			if(strcmp("1",i) && strcmp("2",i))
+			printf("Nepostojeca opcija!\nPonovite unos:");
+		} while (strcmp(i,"1") && strcmp(i, "2"));
+		if (!strcmp(i, "1"))
 			do {
 				d = prijava(niz, n);
 			} while (d == 0);
 
-		else if (i == '2')
+		else if (!strcmp(i,"2"))
 			registracija(niz, n, dat);
 	}
 	else
