@@ -4,7 +4,6 @@
 
 typedef struct artikal
 {
-	char valuta[4];
 	char naziv[21];
 	int sifra;
 	double cijena, kolicina, ukupno;
@@ -17,6 +16,7 @@ typedef struct racun
 	ARTIKAL *nizA;
 	int brojArtikala;
 	double ukupno, pdv, ukupnoPl;
+	char valuta[4];
  }RACUN;
 
 typedef struct node
