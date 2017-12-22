@@ -16,6 +16,7 @@ typedef struct racun
 	ARTIKAL *nizA;
 	int brojArtikala;
 	double ukupno, pdv, ukupnoPl;
+	char valuta[4];
  }RACUN;
 
 typedef struct node
