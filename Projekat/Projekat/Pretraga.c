@@ -85,18 +85,50 @@ int trazi_po_kupcu(NODE*head,char*kupac)
     return br;
 }
 
-int trazi_po_datumu(NODE*head, char*datum_novi)
+int trazi_po_datumu(NODE*head, char*m)
 {
-	NODE*p=head;
+	int broj = 0;
+	NODE *p = head;
 	if (p == NULL)
 		return 0;
-	int br = 0;
-	for (; p != NULL; p = p->next)
+	for (; p; p = p->next)
 	{
-		if (strcmp(p->racun.datum, datum_novi) == 0)
-			br++;
+		if (p->racun.datum[3] == m[0] && p->racun.datum[4] == m[1])
+			broj++;
 	}
-	return br;
+	return broj;
+}
+
+void mjesec(NODE *head, char* m, int broj)
+{
+	RACUN *niz = (RACUN*)calloc(broj, sizeof(RACUN));
+	double ukupno = 0, pdv = 0;
+	int i = 0;
+	NODE *p = head;
+	if (p == NULL)
+		return;
+	for (; p; p = p->next)
+	{
+		if (p->racun.datum[3] == m[0] && p->racun.datum[4] == m[1])
+			niz[i++] = p->racun;
+	}
+	printf("-------------------------------------------------------------------------------------------------\n");
+	printf("DATUM\t\t\t\KUPAC\t\t\ARTIKAL\t\t\CIJENA\t\t\KOLICINA\t\UKUPNO\n");
+	printf("-------------------------------------------------------------------------------------------------\n");
+	for (int i = 0; i < broj; i++)
+	{
+		for (int j = 0; j < niz[i].brojArtikala; j++)
+			printf("%s\t\t\%s\t\t\%s\t\t\%.2lf\t\t\%.2lf\t\t\%.2lf\n", niz[i].datum, niz[i].kupac, niz[i].nizA[j].naziv, niz[i].nizA[j].cijena, niz[i].nizA[j].kolicina, niz[i].nizA[j].ukupno);
+		ukupno += niz[i].ukupno;
+		pdv += niz[i].pdv;
+
+	}
+	printf("-------------------------------------------------------------------------------------------------\n");
+	printf("UKUPNO:%.2lf\n", ukupno);
+	printf("PDV:%.2lf\n", pdv);
+	printf("-------------------------------------------------------------------------------------------------\n");
+	free(niz);
+
 }
 
 void insert(NODE** head, RACUN* racun)

@@ -205,11 +205,19 @@ int prijava(KORISNIK* niz, int n)
 						printf("Nema trazenog artikla!\n");
 				}
 
-				/*
+				
 				else if (d[0] == '3')
-				ukupna_prodaja();
-				else
-				printf("Greska!");*/
+				{
+					char m[3];
+					printf("Pregled ukupne prodaje za mjesec:");
+					scanf("%s", m);
+					int broj = trazi_po_datumu(head, m);
+					if (broj == 0)
+						printf("Nema podataka za taj mjesec!\n");
+					else
+						mjesec(head, m, broj);
+				}
+				
 			} while (d[0] != '0');
 			brisi_listu(&head);
 		}
