@@ -7,6 +7,6 @@ typedef struct valuta
 	double koeficijent;
 }VALUTA;
 
-void ucitajValutu();
+VALUTA ucitajValutu();
 
 #endif //VALUTA_H

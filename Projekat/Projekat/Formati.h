@@ -1,6 +1,7 @@
 #ifndef FORMATI_H
 #define FORMATI_H
 #include <stdio.h>
+#include "valuta.h"
 
 typedef struct artikal
 {
@@ -16,7 +17,7 @@ typedef struct racun
 	ARTIKAL *nizA;
 	int brojArtikala;
 	double ukupno, pdv, ukupnoPl;
-	char valuta[4];
+	VALUTA valuta;
  }RACUN;
 
 typedef struct node

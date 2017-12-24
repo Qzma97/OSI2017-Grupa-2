@@ -5,6 +5,7 @@
 #include "osi.h"
 #include "Formati.h"
 #include "Pretraga.h"
+#include "valuta.h"
 
 
 
@@ -22,6 +23,7 @@ int prijava(KORISNIK* niz, int n)
 		system("cls");
 		if (k.tip == 0)
 		{
+			VALUTA val = ucitajValutu();
 			int format = 0;
 			WIN32_FIND_DATA findFileData;
 			HANDLE hFind;
@@ -39,7 +41,9 @@ int prijava(KORISNIK* niz, int n)
 					racun.nizA = (ARTIKAL*)malloc(racun.brojArtikala * sizeof(ARTIKAL));
 					for (int j = 0; j < racun.brojArtikala; j++)
 						fscanf(dat, "%s %d %lf %lf %lf\n", racun.nizA[j].naziv, &racun.nizA[j].sifra, &racun.nizA[j].cijena, &racun.nizA[j].kolicina, &racun.nizA[j].ukupno);
-					fscanf(dat, "%lf %lf %lf\n", &racun.ukupno, &racun.pdv, &racun.ukupnoPl);
+					fscanf(dat, "%lf %lf %lf %lf %s\n", &racun.ukupno, &racun.pdv, &racun.ukupnoPl,&racun.valuta.koeficijent,racun.valuta.oznaka);
+					racun.valuta.koeficijent = val.koeficijent;
+					strcpy(racun.valuta.oznaka, val.oznaka);
 					insert(&head, &racun);
 					fseek(dat, 77, SEEK_CUR);
 				}
@@ -74,7 +78,8 @@ int prijava(KORISNIK* niz, int n)
 							racun=format1(f, e);
 							if (verifikacija(&racun))
 							{
-								//f = fopen(e, "r");
+								racun.valuta.koeficijent = val.koeficijent;
+								strcpy(racun.valuta.oznaka, val.oznaka);
 								insert(&head, &racun);
 								memory(f, e, findFileData.cFileName);
 								ispravno++;
@@ -90,7 +95,8 @@ int prijava(KORISNIK* niz, int n)
 							racun = format2(f, e);
 							if (verifikacija(&racun))
 							{
-								//f = fopen(e, "r");
+								racun.valuta.koeficijent = val.koeficijent;
+								strcpy(racun.valuta.oznaka, val.oznaka);
 								insert(&head, &racun);
 								memory(f, e, findFileData.cFileName);
 								ispravno++;
@@ -106,7 +112,8 @@ int prijava(KORISNIK* niz, int n)
 							racun = format3(f, e);
 							if (verifikacija(&racun))
 							{
-								//f = fopen(e, "r");
+								racun.valuta.koeficijent = val.koeficijent;
+								strcpy(racun.valuta.oznaka, val.oznaka);
 								insert(&head, &racun);
 								memory(f, e, findFileData.cFileName);
 								ispravno++;
@@ -122,7 +129,8 @@ int prijava(KORISNIK* niz, int n)
 							racun=format4(f,e);
 							if (verifikacija(&racun))
 							{
-							//	f = fopen(e, "r");
+								racun.valuta.koeficijent = val.koeficijent;
+								strcpy(racun.valuta.oznaka, val.oznaka);
 								insert(&head, &racun);
 								memory(f, e, findFileData.cFileName);
 								ispravno++;
@@ -138,6 +146,8 @@ int prijava(KORISNIK* niz, int n)
 							racun = format5(f, e, findFileData.cFileName);
 							if (verifikacija(&racun))
 							{
+								racun.valuta.koeficijent = val.koeficijent;
+								strcpy(racun.valuta.oznaka, val.oznaka);
 								f = fopen(e, "r");
 								insert(&head, &racun);
 								memory(f, e, findFileData.cFileName);
@@ -171,13 +181,13 @@ int prijava(KORISNIK* niz, int n)
 						fprintf(dat, "%s %d %.2lf %.2lf %.2lf\n", temp->racun.nizA[i].naziv, temp->racun.nizA[i].sifra, temp->racun.nizA[i].cijena, temp->racun.nizA[i].kolicina, temp->racun.nizA[i].ukupno);
 
 					}
-					fprintf(dat, "%.2lf %.2lf %.2lf\n", temp->racun.ukupno, temp->racun.pdv, temp->racun.ukupnoPl);
+					fprintf(dat, "%.2lf %.2lf %.2lf %.2lf %s\n", temp->racun.ukupno, temp->racun.pdv, temp->racun.ukupnoPl,temp->racun.valuta.koeficijent,temp->racun.valuta.oznaka);
 					fprintf(dat, "___________________________________________________________________________\n");
 				}
 				fclose(dat);
 			}
-			printf("Broj ispravnih racuna: %d\n", ispravno);
-			printf("Broj neispravnih racuna: %d\n", neispravno);
+			printf("Broj novih ispravnih racuna: %d\n", ispravno);
+			printf("Broj novih neispravnih racuna: %d\n", neispravno);
 			int found;
 			char d[3],pom[31] = { 0 };
 			do {
@@ -191,8 +201,17 @@ int prijava(KORISNIK* niz, int n)
 				printf("-------------------------------------------------------------------------------------------------\n");
 				scanf("%s", d);
 				system("cls");
-				if (d[0] == '1');
-				//pregled_kupca();
+				if (d[0] == '1')
+				{
+					printf("Unesite naziv trazenog kupca: ");
+					scanf("%s", pom);
+					if (found = trazi_po_kupcu(head, pom))
+					{
+						kupac(head, pom, found);
+					}
+					else
+						printf("Nema trazenog kupca!\n");
+				}
 				else if (d[0] == '2')
 				{
 					printf("Unesite trazeni proizvod: ");
@@ -254,7 +273,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 	int i = 1;
 	do
 	{
-		printf("\tKorisnicko ime:");
+		printf("\tKorisnicko ime (bez upotrebe razmaka):");
 		scanf("%s", pom1);
 		i = search_(niz, n, pom1);
 		if (i == 1)

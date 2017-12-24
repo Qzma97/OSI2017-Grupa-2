@@ -27,6 +27,9 @@
     <ClCompile Include="Pretraga.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="valuta.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osi.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pretraga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="valuta.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

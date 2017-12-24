@@ -10,5 +10,6 @@ void artikal(NODE*, int, char*);
 int trazi_po_datumu(NODE*, char*);
 void mjesec(NODE*, char*, int);
 int trazi_po_kupcu(NODE*head, char*kupac);
+void kupac(NODE*, char*, int);
 
 #endif // FORMAT1_H
