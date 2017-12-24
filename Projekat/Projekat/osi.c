@@ -25,9 +25,26 @@ int prijava(KORISNIK* niz, int n)
 			int format = 0;
 			WIN32_FIND_DATA findFileData;
 			HANDLE hFind;
-			FILE* f,*f1=0;
+			FILE* f,*f1=0, *dat;
 			NODE* head=NULL;
 			RACUN racun;
+			int br = 0;
+			if (dat = fopen("racuni.txt", "r"))
+			{
+				fseek(dat, 12, SEEK_SET);
+				fscanf(dat, "%d\n", &br);
+				for (int i = 0; i < br; i++)
+				{
+					fscanf(dat, "%s %s %d\n", racun.datum, racun.kupac, &racun.brojArtikala);
+					racun.nizA = (ARTIKAL*)malloc(racun.brojArtikala * sizeof(ARTIKAL));
+					for (int j = 0; j < racun.brojArtikala; j++)
+						fscanf(dat, "%s %d %lf %lf %lf\n", racun.nizA[j].naziv, &racun.nizA[j].sifra, &racun.nizA[j].cijena, &racun.nizA[j].kolicina, &racun.nizA[j].ukupno);
+					fscanf(dat, "%lf %lf %lf\n", &racun.ukupno, &racun.pdv, &racun.ukupnoPl);
+					insert(&head, &racun);
+					fseek(dat, 77, SEEK_CUR);
+				}
+				fclose(dat);
+			}
 			char gk=0,*c = "./input/",*g="./memory/";
 			hFind = FindFirstFile("./input/*", &findFileData);
 			if (hFind != INVALID_HANDLE_VALUE)
@@ -143,6 +160,22 @@ int prijava(KORISNIK* niz, int n)
 
 				FindClose(hFind);
 			}
+			if (dat = fopen("racuni.txt", "w"))
+			{
+				fprintf(dat, "Broj racuna:%d\n", br + ispravno);
+				for (NODE *temp = head; temp; temp = temp->next)
+				{
+					fprintf(dat, "%s %s %d\n", temp->racun.datum, temp->racun.kupac, temp->racun.brojArtikala);
+					for (int i = 0; i < temp->racun.brojArtikala; i++)
+					{
+						fprintf(dat, "%s %d %.2lf %.2lf %.2lf\n", temp->racun.nizA[i].naziv, temp->racun.nizA[i].sifra, temp->racun.nizA[i].cijena, temp->racun.nizA[i].kolicina, temp->racun.nizA[i].ukupno);
+
+					}
+					fprintf(dat, "%.2lf %.2lf %.2lf\n", temp->racun.ukupno, temp->racun.pdv, temp->racun.ukupnoPl);
+					fprintf(dat, "___________________________________________________________________________\n");
+				}
+				fclose(dat);
+			}
 			printf("Broj ispravnih racuna: %d\n", ispravno);
 			printf("Broj neispravnih racuna: %d\n", neispravno);
 			int found;
@@ -172,11 +205,19 @@ int prijava(KORISNIK* niz, int n)
 						printf("Nema trazenog artikla!\n");
 				}
 
-				/*
+				
 				else if (d[0] == '3')
-				ukupna_prodaja();
-				else
-				printf("Greska!");*/
+				{
+					char m[3];
+					printf("Pregled ukupne prodaje za mjesec:");
+					scanf("%s", m);
+					int broj = trazi_po_datumu(head, m);
+					if (broj == 0)
+						printf("Nema podataka za taj mjesec!\n");
+					else
+						mjesec(head, m, broj);
+				}
+				
 			} while (d[0] != '0');
 			brisi_listu(&head);
 		}
@@ -209,7 +250,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 
 	KORISNIK temp;
 	char pom1[16], pom2[5];
-	printf("UNESITE PODATKE(bez upotrebe razmaka!):\n");
+	printf("UNESITE PODATKE:\n");
 	int i = 1;
 	do
 	{
