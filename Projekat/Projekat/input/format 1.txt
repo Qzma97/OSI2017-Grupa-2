@@ -1,5 +1,5 @@
 Kupac: ABC
-Datum: 24/10/2017
+Datum: 30/10/2017
 
 	       Racun
 
