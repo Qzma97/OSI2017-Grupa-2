@@ -189,7 +189,7 @@ int prijava(KORISNIK* niz, int n)
 			printf("Broj novih ispravnih racuna: %d\n", ispravno);
 			printf("Broj novih neispravnih racuna: %d\n", neispravno);
 			int found;
-			char d[3],pom[31] = { 0 };
+			char d[20],pom[31] = { 0 };
 			do {
 				printf("-------------------------------------------------------------------------------------------------\n");
 				printf("IZABERITE OPCIJU:\n");
@@ -228,7 +228,7 @@ int prijava(KORISNIK* niz, int n)
 				else if (d[0] == '3')
 				{
 					char m[3];
-					printf("Pregled ukupne prodaje za mjesec:");
+					printf("Pregled ukupne prodaje za mjesec(2 cifre):");
 					scanf("%s", m);
 					int broj = trazi_po_datumu(head, m);
 					if (broj == 0)
