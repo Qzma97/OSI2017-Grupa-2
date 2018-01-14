@@ -242,16 +242,27 @@ int prijava(KORISNIK* niz, int n)
 		}
 		else if (k.tip == 1)
 		{
-			printf("\t1.Podesavanje valute\n");
-			printf("\t2.Upravljanje korisnickim nalozima\n");
-			scanf("%d", &d);
-			printf("-------------------------------------------------------------------------------------------------\n");
-			/*if (d == 1)
-			podesavanje_valute();
-			else if (d == 2)
-			upravljanje_nalozima();
-			else
-			printf("Greska!\n");*/
+			char d[20];
+			do
+			{
+				printf("-------------------------------------------------------------------------------------------------\n");
+				printf("IZABERITE OPCIJU:\n");
+				printf("-------------------------------------------------------------------------------------------------\n");
+				printf("\t1.Podesavanje valute\n");
+				printf("\t2.Upravljanje korisnickim nalozima\n");
+				printf("\t0.Izlaz iz programa\n");
+				printf("-------------------------------------------------------------------------------------------------\n");
+				scanf("%s", d);
+				system("cls");
+				if (d[0] == '1')
+				{
+					izborValute();
+				}
+				else if (d[0] == '2')
+				{
+					//upravljanje_nalozima();
+				}
+			} while (d[0] != '0');	
 		}
 		return 1;
 

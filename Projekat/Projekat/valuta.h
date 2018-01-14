@@ -8,5 +8,6 @@ typedef struct valuta
 }VALUTA;
 
 VALUTA ucitajValutu();
+void izborValute();
 
 #endif //VALUTA_H
