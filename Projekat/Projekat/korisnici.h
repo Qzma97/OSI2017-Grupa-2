@@ -8,8 +8,6 @@ typedef struct korisnik
 
 typedef struct cvor { KORISNIK k; struct cvor *sljedeci; } CVOR;
 
-void promjenaTipa(int, int, CVOR*);
-
 void ispis_korisnika(CVOR *glava)
 {
  int rb=0;
