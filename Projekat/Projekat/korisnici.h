@@ -26,3 +26,4 @@ void ispis_korisnika(CVOR *glava)
 
 void promjenaTipa(int, int, CVOR*);
 CVOR* ucitaj_naloge_iz_fajla();
+void deleteNode(struct Node **, int);
