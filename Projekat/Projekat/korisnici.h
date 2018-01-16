@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 typedef struct korisnik
 {
 	char PIN[5], korisnicko_ime[16];
@@ -24,3 +25,4 @@ void ispis_korisnika(CVOR *glava)
 }
 
 void promjenaTipa(int, int, CVOR*);
+CVOR* ucitaj_naloge_iz_fajla();
