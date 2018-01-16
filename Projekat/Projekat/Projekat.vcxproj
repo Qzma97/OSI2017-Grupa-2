@@ -113,6 +113,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Formati.c" />
+    <ClCompile Include="korisnici.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="osi.c" />
     <ClCompile Include="Pretraga.c" />
@@ -120,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Formati.h" />
+    <ClInclude Include="korisnici.h" />
     <ClInclude Include="osi.h" />
     <ClInclude Include="Pretraga.h" />
     <ClInclude Include="valuta.h" />

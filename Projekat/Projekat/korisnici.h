@@ -1,3 +1,4 @@
+#include <stdio.h>
 typedef struct korisnik
 {
 	char PIN[5], korisnicko_ime[16];
@@ -13,11 +14,13 @@ void ispis_korisnika(CVOR *glava)
  int rb=0;
  printf("RB. KORISNICKI NALOG IME             PREZIME              TIP KORISNIKA EMAIL\n");
  while(glava)
-{
+ {
 	printf("%2d. %-16s %-15s %-20s ",rb++,glava->k.korisnicko_ime,glava->k.ime,glava->k.prezime);
 	if((glava->k.tip)==0) printf("Analiticar   ");
 	if ((glava->k.tip)==1) printf("Admin        ");
 	printf(" %s\n",glava->k.email);
 	glava=glava->sljedeci;
+ }
 }
-}
+
+void promjenaTipa(int, int, CVOR*);
