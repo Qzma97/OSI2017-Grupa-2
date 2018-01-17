@@ -42,10 +42,10 @@
 	 }
 	 else printf("Greska prilikom otvaranja datoteke! \n");
 	 VALUTA t = ucitajValutu();
-	 printf("TRENUTNA VALUTA:\n\t%s %.2lf\n", t.oznaka, t.koeficijent);
+	 printf("TRENUTNA VALUTA:\n\t%s \n", t.oznaka);
 	 printf("POSTOJECE VALUTE:\n");
 	 for (int i = 0; i < br; i++)
-		 printf("\t%d.%s %.2lf\n", i + 1, valute[i].oznaka, valute[i].koeficijent);
+		 printf("\t%d.%s \n", i + 1, valute[i].oznaka);
 	 do
 	 {
 		 printf("IZABERITE VALUTU:\n");
