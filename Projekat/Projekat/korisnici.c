@@ -51,6 +51,7 @@ CVOR* ucitaj_naloge_iz_fajla()
     return head;
 }
 
+
 void deleteNode(CVOR**head_ref, int position)
 {
 	
@@ -106,3 +107,4 @@ void ispis_korisnika(CVOR *glava)
 		glava = glava->sljedeci;
 	}
 }
+

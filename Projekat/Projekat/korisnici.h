@@ -14,3 +14,4 @@ void deleteNode(CVOR **, int );
 void promjenaTipa(int, int, CVOR**);
 
 CVOR* ucitaj_naloge_iz_fajla();
+void deleteNode(struct Node **, int);
