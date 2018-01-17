@@ -30,6 +30,9 @@
     <ClCompile Include="valuta.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="korisnici.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="osi.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="valuta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="korisnici.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

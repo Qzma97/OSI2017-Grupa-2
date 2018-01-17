@@ -8,7 +8,7 @@
 int main()
 {
 	printf("ver. 1.0\n");
-	printf("\n\n\n\n\t\t\t*****System of Consumer Analitics*****");
+	printf("\n\n\n\n\t\t\t*****System of Consumer Analytics*****");
 	Sleep(3000);//program se zaustavlja 3 sek
 	system("cls");
 	FILE *dat;

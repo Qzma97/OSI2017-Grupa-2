@@ -6,16 +6,27 @@
 #include "Formati.h"
 #include "Pretraga.h"
 #include "valuta.h"
+#include "korisnici.h"
 
 
 
 int prijava(KORISNIK* niz, int n)
 {
-	char ime[16], pin[5];
+	int check = 0;
+	char ime[16], pin[5], pom[31] = { 0 };
 	printf("KORISNICKO IME:"); scanf("%s", ime);
-	printf("PIN:"); scanf("%s", pin);
+	printf("PIN:"); 
+	do {
+		if (check) {
+			printf("PIN smije samo cifre sadrzati!\n");
+			printf("Molim vas unesite ponovo vas PIN: ");
+		}
+		scanf("%s", pom);
+		strncpy(pin, pom, 5);
+		check++;
+	} while (pin[0] < 48 || pin[0]>57);
 	KORISNIK k;
-	int d,ispravno=0,neispravno=0;
+	int ispravno=0,neispravno=0;
 	if ((search(niz, n, &k, ime, pin)) == 1)
 	{
 		printf("USPJESNA PRIJAVA!\n");
@@ -242,26 +253,80 @@ int prijava(KORISNIK* niz, int n)
 		}
 		else if (k.tip == 1)
 		{
-			printf("\t1.Podesavanje valute\n");
-			printf("\t2.Upravljanje korisnickim nalozima\n");
-			scanf("%d", &d);
-			printf("-------------------------------------------------------------------------------------------------\n");
-			/*if (d == 1)
-			podesavanje_valute();
-			else if (d == 2)
-			upravljanje_nalozima();
-			else
-			printf("Greska!\n");*/
+			CVOR* lista_naloga = ucitaj_naloge_iz_fajla();
+			char d[20];
+			do
+			{
+				printf("-----------------------------------------------------------------------------------------------------------------------\n");
+				printf("IZABERITE OPCIJU:\n");
+				printf("-----------------------------------------------------------------------------------------------------------------------\n");
+				printf("\t1.Podesavanje valute\n");
+				printf("\t2.Prikaz liste korisnickih naloga\n");
+				printf("\t3.Promjena tipa korisnickog naloga\n");
+				printf("\t4.Brisanje korisnickog naloga\n");
+				printf("\t0.Izlaz iz programa\n");
+				printf("-----------------------------------------------------------------------------------------------------------------------\n");
+				scanf("%s", d);
+				system("cls");
+				if (d[0] == '1')
+				{
+					izborValute();
+				}
+				else if (d[0] == '2')
+				{
+					ispis_korisnika(lista_naloga);
+				}
+				else if (d[0] == '3')
+				{
+					int a, b, provjera = 0,vel=listSize(lista_naloga);
+					printf("Moguci korisnicki tipovi su:\n [1] Admin\n [0] Analiticar\n");
+					printf("Unesite redni broj korisnickog naloga i u koji tip mijenjate dati nalog (2 broja sa razmakom izmedju): ");
+					do
+					{
+						if (provjera)
+						{
+							printf("Ukucali ste nepostojeci redni broj ili ste ukucali nepostojeci tip korisnika!\n");
+						}
+						scanf("%d %d",&a,&b);
+						provjera++;
+					} while (((b != 0) && (b != 1))||((a<0)||(a>=vel)));
+					promjenaTipa(a, b, &lista_naloga);
+				}
+				else if (d[0] == '4')
+				{
+					int a, provjera = 0, vel = listSize(lista_naloga);
+					printf("Unesite redni broj korisnickog naloga koji zelite obrisati: ");
+					do
+					{
+						if (provjera)
+						{
+							printf("Ukucali ste nepostojeci redni broj!\n");
+						}
+						scanf("%d", &a);
+						provjera++;
+					} while ((a<0) || (a>=vel));
+					deleteNode(&lista_naloga, a);
+				}
+			} while (d[0] != '0');	
+			FILE* f = fopen("korisnici.dat", "wb");
+			while (lista_naloga)
+			{
+				CVOR* temp = lista_naloga;
+				lista_naloga = lista_naloga->sljedeci;
+				fwrite(&temp->k, sizeof(KORISNIK), 1, f);
+				free(temp);
+			}
+			fclose(f);
 		}
 		return 1;
 
 	}
 	else
 	{
-		printf("NEPOSTOJECI KORISNIK!\n");
+		printf("NEUSPJESNA PRIJAVA!\n");
 		return 0;
 	}
-
+	return 0;
 }
 
 void registracija(KORISNIK* niz, int n, FILE *f)

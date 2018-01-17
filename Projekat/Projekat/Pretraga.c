@@ -47,15 +47,16 @@ void artikal(NODE* head, int num, char*pom)
 		temp = temp->next;
 	}
 	printf("-------------------------------------------------------------------------------------------------\n");
-	printf("%s\n", pom);
+	printf("NAZIV: %s SIFRA: %d\n", pom,racuni->nizA->sifra);
 	printf("-------------------------------------------------------------------------------------------------\n");
 	printf("DATUM\t\tKOLICINA\t\tCIJENA\t\t\tUKUPNO\n");
 	for(int i=0;i<index;i++)
 	{
-		printf("%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizA->kolicina, racuni[i].nizA->cijena*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka, racuni[i].nizA->ukupno,racuni[i].valuta.oznaka);
+		printf("%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizA->kolicina, racuni[i].nizA->cijena*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka, racuni[i].nizA->ukupno*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka);
 	}
 	printf("-------------------------------------------------------------------------------------------------\n");
 	printf("UKUPNA KOLICINA: %.2lf			UKUPNA CIJENA: %.2lf %s\n", kolicina, ukupno*racuni[0].valuta.koeficijent, racuni[0].valuta.oznaka);
+	printf("PDV: %.2lf %s			UKUPNO ZA PLACANJE: %.2lf %s\n", ukupno*racuni[0].valuta.koeficijent*0.17, racuni[0].valuta.oznaka, ukupno*racuni[0].valuta.koeficijent*0.17+ ukupno*racuni[0].valuta.koeficijent, racuni[0].valuta.oznaka);
 	free(racuni);
 }
 
@@ -113,21 +114,22 @@ void mjesec(NODE *head, char* m, int broj)
 		if (p->racun.datum[3] == m[0] && p->racun.datum[4] == m[1])
 			niz[i++] = p->racun;
 	}
-	printf("-------------------------------------------------------------------------------------------------\n");
-	printf("DATUM\t\t\tKUPAC\t\tARTIKAL\t\tCIJENA\t\tKOLICINA\tUKUPNO\n");
-	printf("-------------------------------------------------------------------------------------------------\n");
+	printf("---------------------------------------------------------------------------------------------------------------------\n");
+	printf("DATUM\t\t\tKUPAC\t\tARTIKAL\t\tSIFRA\t\tCIJENA\t\tKOLICINA\tUKUPNO\n");
+	printf("---------------------------------------------------------------------------------------------------------------------\n");
 	for (int i = 0; i < broj; i++)
 	{
 		for (int j = 0; j < niz[i].brojArtikala; j++)
-			printf("%s\t\t%s\t\t%s\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizA[j].naziv, niz[i].nizA[j].cijena*niz[i].valuta.koeficijent,niz[i].valuta.oznaka, niz[i].nizA[j].kolicina, niz[i].nizA[j].ukupno, niz[i].valuta.oznaka);
+			printf("%s\t\t%s\t\t%s\t\t%d\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizA[j].naziv, niz[i].nizA[j].sifra, niz[i].nizA[j].cijena*niz[i].valuta.koeficijent,niz[i].valuta.oznaka, niz[i].nizA[j].kolicina, niz[i].nizA[j].ukupno*niz[i].valuta.koeficijent, niz[i].valuta.oznaka);
 		ukupno += niz[i].ukupno;
 		pdv += niz[i].pdv;
 
 	}
-	printf("-------------------------------------------------------------------------------------------------\n");
+	printf("---------------------------------------------------------------------------------------------------------------------\n");
 	printf("UKUPNO: %.2lf %s\n", ukupno*niz[0].valuta.koeficijent, niz[0].valuta.oznaka);
 	printf("PDV: %.2lf %s\n", pdv*niz[0].valuta.koeficijent, niz[0].valuta.oznaka);
-	printf("-------------------------------------------------------------------------------------------------\n");
+	printf("UKUPNO ZA PLACANJE: %.2lf %s\n", pdv*niz[0].valuta.koeficijent+ ukupno*niz[0].valuta.koeficijent, niz[0].valuta.oznaka);
+	printf("---------------------------------------------------------------------------------------------------------------------\n");
 	free(niz);
 
 }
@@ -153,15 +155,15 @@ void kupac(NODE* lista, char* kupac, int broj)
 			niz[i++] = temp->racun;
 	}
 	printf("-------------------------------------------------------------------------------------------------\n");
-	printf("Kupac:%s\n", niz[0].kupac);
+	printf("Kupac:%s \n", niz[0].kupac);
 	printf("-------------------------------------------------------------------------------------------------\n");
-	printf("ARTIKAL\t\tCIJENA\t\t\tKOLICINA\tUKUPNO\n");
+	printf("ARTIKAL\t\tSIFRA\t\tCIJENA\t\t\tKOLICINA\tUKUPNO\n");
 	printf("-------------------------------------------------------------------------------------------------\n");
 	for (j = 0; j<broj; j++)
 	{
 		for (k = 0; k<niz[j].brojArtikala; k++)
 		{
-			printf("%s\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", niz[j].nizA[k].naziv, niz[j].nizA[k].cijena*niz[j].valuta.koeficijent,niz[j].valuta.oznaka, niz[j].nizA[k].kolicina, niz[j].nizA[k].ukupno, niz[j].valuta.oznaka);
+			printf("%s\t\t%d\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", niz[j].nizA[k].naziv, niz[j].nizA[k].sifra, niz[j].nizA[k].cijena*niz[j].valuta.koeficijent,niz[j].valuta.oznaka, niz[j].nizA[k].kolicina, niz[j].nizA[k].ukupno*niz[j].valuta.koeficijent, niz[j].valuta.oznaka);
 		}
 		printf("-------------------------------------------------------------------------------------------------\n");
 		printf("Datum:%s", niz[j].datum);
