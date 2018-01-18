@@ -279,7 +279,7 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 		else if (korisnik.tip == 1)
 		{
 			CVOR* lista_naloga = ucitaj_naloge_iz_fajla(); //Ucitavanje liste korisnic
-			char unos[20];
+			char unos[20], helper1[21] = { 0 }, helper2[21] = { 0 };
 			do
 			{
 				//Meni sa opcijama za Administratora.
@@ -312,12 +312,23 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 					printf("Unesite redni broj korisnickog naloga i u koji tip mijenjate dati nalog (2 broja sa razmakom izmedju): ");
 					do
 					{
-						if (provjera) //U slucaju neispravnog unosa ispisace se sljedece poruke.
-						{
-							printf("Ukucali ste nepostojeci redni broj ili ste ukucali nepostojeci tip korisnika!\n");
-						}
-						scanf("%d %d",&redniBrojNaloga,&tipNaloga);
-						provjera++;
+						int check = 0;
+						do {
+							if (provjera) //U slucaju neispravnog unosa ispisace se sljedece poruke.
+							{
+								printf("Ukucali ste nepostojeci redni broj ili ste ukucali nepostojeci tip korisnika! Ponovite unos!\n");
+							}
+							if (check)
+							{
+								printf("Nisu dozvoljeni drugi simboli osim brojeva!\n");
+								printf("Ponovite unos: ");
+							}
+							scanf("%s %s", helper1, helper2);
+							check = 1;
+						} while ((helper1[0] < 48 || helper2[0]>57) || (helper2[0] < 48 || helper2[0]>57));
+						redniBrojNaloga = helper1[0] - 49;
+						tipNaloga = helper2[0] - 48;
+						provjera=1;
 					} while (((tipNaloga != 0) && (tipNaloga != 1))||((redniBrojNaloga<0)||(redniBrojNaloga>=vel)));
 					promjenaTipa(redniBrojNaloga, tipNaloga, &lista_naloga);
 				}
@@ -328,12 +339,14 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 					printf("Unesite redni broj korisnickog naloga koji zelite obrisati: ");
 					do
 					{
+						char helper[21] = { 0 };
 						if (provjera)
 						{
-							printf("Ukucali ste nepostojeci redni broj!\n");
+							printf("Ukucali ste nepostojeci redni broj ili ste ukucali neki drugi znak koji nije broj!\n");
 						}
-						scanf("%d", &redniBrojNaloga);
-						provjera++;
+						scanf("%s", helper);
+						redniBrojNaloga = helper[0] - 49;
+						provjera=1;
 					} while ((redniBrojNaloga<0) || (redniBrojNaloga>=velicinaListe));
 					deleteNode(&lista_naloga, redniBrojNaloga);
 				}

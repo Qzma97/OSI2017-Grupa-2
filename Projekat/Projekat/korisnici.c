@@ -94,7 +94,7 @@ int listSize(CVOR *head)
 
 void ispis_korisnika(CVOR *glava)
 {
-	int rb = 0;
+	int rb = 1;
 	printf("RB. KORISNICKI NALOG\tIME\t\tPREZIME\t\t\tTIP KORISNIKA\t\tEMAIL\n");
 	printf("-----------------------------------------------------------------------------------------------------------------------\n");
 	while (glava)

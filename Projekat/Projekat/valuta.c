@@ -47,8 +47,10 @@
 		 printf("\t%d.%s \n", i + 1, valute[i].oznaka);
 	 do
 	 {
+		 char helper[21] = { 0 };
 		 printf("IZABERITE VALUTU:\n");
-		 scanf("%d", &val);
+		 scanf("%s", helper);
+		 val = helper[0] - 48;
 		 if (val <= 0 || val > br)
 		 {
 			 val = -1;
