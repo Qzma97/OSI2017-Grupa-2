@@ -22,7 +22,6 @@
 	 return nizVal[v];
 }
 
-
  void izborValute()
  {
 

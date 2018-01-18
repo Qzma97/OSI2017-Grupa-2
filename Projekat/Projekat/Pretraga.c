@@ -72,7 +72,6 @@ void brisi_listu(NODE**head)
     }
 }
 
-
 int trazi_po_kupcu(NODE*head,char*kupac)
 {
     NODE*p=head;

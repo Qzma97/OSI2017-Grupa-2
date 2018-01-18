@@ -9,47 +9,49 @@ int main()
 {
 	printf("ver. 1.0\n");
 	printf("\n\n\n\n\t\t\t*****System of Consumer Analytics*****");
-	Sleep(3000);//program se zaustavlja 3 sek
-	system("cls");
+	Sleep(3000);		//Program se zaustavlja 3 sekunde
+	system("cls");		//Brisanje prethodnog ispisanog sadrzaja na ekranu
 	FILE *dat;
-	int c = 10, n = 0;
-	KORISNIK *niz = (KORISNIK*)malloc(c * sizeof(KORISNIK));
+	int defaultSize = 10, indexNaloga = 0;
+	KORISNIK *nizNaloga = (KORISNIK*)malloc(defaultSize * sizeof(KORISNIK));  //Ucitavanje korisnickih naloga
 	if ((dat = fopen("korisnici.dat", "rb")) != NULL)
 	{
-		int p;
+		int pom;
 		KORISNIK  temp;
 		do {
-			if ((p = fread(&temp, sizeof(KORISNIK), 1, dat) == 1))
-				if (n == c)
-					niz = (KORISNIK*)realloc(niz, (c *= 2) * sizeof(KORISNIK));
-			niz[n++] = temp;
-		} while (p);
-		n--;
+			if ((pom = fread(&temp, sizeof(KORISNIK), 1, dat) == 1))
+				if (indexNaloga == defaultSize)
+					nizNaloga = (KORISNIK*)realloc(nizNaloga, (defaultSize *= 2) * sizeof(KORISNIK));
+			nizNaloga[indexNaloga++] = temp;
+		} while (pom);
+		indexNaloga--;
 		fclose(dat);
+		//Ispis pocetnog menija
 		printf("-------------------------------------------------------------------------------------------------\n");
 		printf("PRIJAVA-1\n");
 		printf("REGISTRACIJA-2\n");
 		printf("-------------------------------------------------------------------------------------------------\n");
-		char i[100];
-		int d = 0;
+		char izborOpcije[100];
+		int returnValue = 0;
+		//Izbor opcije sve dok korisnik ne izabere jednu od opcija
 		do
 		{
-			scanf("%s", i);
-			if(strcmp("1",i) && strcmp("2",i))
+			scanf("%s", izborOpcije);
+			if(strcmp("1",izborOpcije) && strcmp("2",izborOpcije))
 			printf("Nepostojeca opcija!\nPonovite unos:");
-		} while (strcmp(i,"1") && strcmp(i, "2"));
-		if (!strcmp(i, "1"))
+		} while (strcmp(izborOpcije,"1") && strcmp(izborOpcije, "2"));
+		if (!strcmp(izborOpcije, "1"))
 			do {
-				d = prijava(niz, n);
-			} while (d == 0);
+				returnValue = prijava(nizNaloga, indexNaloga); //Prijava za postojece korisnike
+			} while (returnValue == 0);
 
-		else if (!strcmp(i,"2"))
-			registracija(niz, n, dat);
+		else if (!strcmp(izborOpcije,"2"))
+			registracija(nizNaloga, indexNaloga, dat); //Registracija novih korisnika
 	}
-	else
+	else //Ako nema fajla "korisnici.dat" pocinje se automatski sa registracijom
 	{
 		printf("REGISTRACIJA:\n");
-		registracija(niz, n, dat);
+		registracija(nizNaloga, indexNaloga, dat);
 	}
 	getchar();
 	getchar();

@@ -343,6 +343,7 @@ void memory(FILE*f, char*naziv,char*fajl)
 	remove(naziv);
 	free(pom);
 }
+
 void error(FILE*f, char*naziv, char*fajl)
 {
 	int i,j=4,k=0;
