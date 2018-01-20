@@ -2,10 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-int trazi_po_artiklu(NODE* head, char* naziv)
+int traziPoArtiklu(NODE* glava, char* naziv)
 {
-	int count = 0;
-	NODE* temp = head;
+	int brojac = 0;
+	NODE* temp = glava;
 	if (temp == NULL)
 		return 0;
 	while (temp != NULL)
@@ -13,46 +13,46 @@ int trazi_po_artiklu(NODE* head, char* naziv)
 		int i = 0, n = temp->racun.brojArtikala;
 		while (n--)
 		{
-			if (strcmp(naziv, temp->racun.nizA[i].naziv) == 0)
-				count++;
+			if (strcmp(naziv, temp->racun.nizArtikala[i].naziv) == 0)
+				brojac++;
 			i++;
 		}
-		temp = temp->next;
+		temp = temp->sljedeci;
 	}
-	return count;
+	return brojac;
 }
 
-void artikal(NODE* head, int num, char*nazivArtikla)
+void pregledArtikla(NODE* glava, int brRacunaSaArt, char*nazivArtikla)
 {
 	double ukupno=0 ,kolicina = 0;
 	int index = 0;
-	NODE* temp=head;
-	RACUN* racuni = (RACUN*)calloc(num, sizeof(RACUN));
-	while (num-index)
+	NODE* temp=glava;
+	RACUN* racuni = (RACUN*)calloc(brRacunaSaArt, sizeof(RACUN));
+	while (brRacunaSaArt-index)
 	{
 		int i=0,n = temp->racun.brojArtikala;
 		while (n--)
 		{
-			if (strcmp(nazivArtikla, temp->racun.nizA[i].naziv) == 0)
+			if (strcmp(nazivArtikla, temp->racun.nizArtikala[i].naziv) == 0)
 			{
-				racuni[index].nizA = &temp->racun.nizA[i];
+				racuni[index].nizArtikala = &temp->racun.nizArtikala[i];
 				strcpy(racuni[index].datum, temp->racun.datum);
-				ukupno += temp->racun.nizA[i].ukupno;
-				kolicina += temp->racun.nizA[i].kolicina;
+				ukupno += temp->racun.nizArtikala[i].ukupno;
+				kolicina += temp->racun.nizArtikala[i].kolicina;
 				racuni[index].valuta = temp->racun.valuta;
 				index++;
 			}
 			i++;
 		}
-		temp = temp->next;
+		temp = temp->sljedeci;
 	}
 	printf("-------------------------------------------------------------------------------------------------\n");
-	printf("NAZIV: %s SIFRA: %d\n", nazivArtikla,racuni->nizA->sifra);
+	printf("NAZIV: %s SIFRA: %d\n", nazivArtikla,racuni->nizArtikala->sifra);
 	printf("-------------------------------------------------------------------------------------------------\n");
 	printf("DATUM\t\tKOLICINA\t\tCIJENA\t\t\tUKUPNO\n");
 	for(int i=0;i<index;i++)
 	{
-		printf("%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizA->kolicina, racuni[i].nizA->cijena*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka, racuni[i].nizA->ukupno*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka);
+		printf("%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizArtikala->kolicina, racuni[i].nizArtikala->cijena*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka, racuni[i].nizArtikala->ukupno*racuni[i].valuta.koeficijent,racuni[i].valuta.oznaka);
 	}
 	printf("-------------------------------------------------------------------------------------------------\n");
 	printf("UKUPNA KOLICINA: %.2lf			UKUPNA CIJENA: %.2lf %s\n", kolicina, ukupno*racuni[0].valuta.koeficijent, racuni[0].valuta.oznaka);
@@ -67,12 +67,12 @@ void ispisZaArtikal(RACUN *racuni, int index, double kolicina, double ukupno, ch
 	if (file = fopen("Pregled_svih_podataka_za_artikal.txt", "w"))
 	{
 		fprintf(file,"-------------------------------------------------------------------------------------------------\n");
-		fprintf(file,"NAZIV: %s SIFRA: %d\n", naziv, racuni->nizA->sifra);
+		fprintf(file,"NAZIV: %s SIFRA: %d\n", naziv, racuni->nizArtikala->sifra);
 		fprintf(file,"-------------------------------------------------------------------------------------------------\n");
 		fprintf(file,"DATUM\t\tKOLICINA\t\tCIJENA\t\t\tUKUPNO\n");
 		for (int i = 0; i < index; i++)
 		{
-			fprintf(file,"%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizA->kolicina, racuni[i].nizA->cijena*racuni[i].valuta.koeficijent, racuni[i].valuta.oznaka, racuni[i].nizA->ukupno*racuni[i].valuta.koeficijent, racuni[i].valuta.oznaka);
+			fprintf(file,"%s\t%.2lf\t\t\t%.2lf %s\t\t%.2lf %s\n", racuni[i].datum, racuni[i].nizArtikala->kolicina, racuni[i].nizArtikala->cijena*racuni[i].valuta.koeficijent, racuni[i].valuta.oznaka, racuni[i].nizArtikala->ukupno*racuni[i].valuta.koeficijent, racuni[i].valuta.oznaka);
 		}
 		fprintf(file,"-------------------------------------------------------------------------------------------------\n");
 		fprintf(file,"UKUPNA KOLICINA: %.2lf			UKUPNA CIJENA: %.2lf %s\n", kolicina, ukupno*racuni[0].valuta.koeficijent, racuni[0].valuta.oznaka);
@@ -82,25 +82,25 @@ void ispisZaArtikal(RACUN *racuni, int index, double kolicina, double ukupno, ch
 	else printf("Neusjesno otvaranej fajla!\n");
 }
 
-void brisi_listu(NODE**head)
+void brisiListu(NODE**glava)
 {
-    NODE*temp=*head;
+    NODE*temp=*glava;
     while(temp)
     {
-        *head=(*head)->next;
-        free(temp->racun.nizA);
+        *glava=(*glava)->sljedeci;
+        free(temp->racun.nizArtikala);
         free(temp);
-        temp=*head;
+        temp=*glava;
     }
 }
 
-int trazi_po_kupcu(NODE*head,char*kupac)
+int traziPoKupcu(NODE*glava,char*kupac)
 {
-    NODE*p=head;
+    NODE*p=glava;
 	if (p == NULL)
 		return 0;
     int br=0;
-    for(;p!=NULL;p=p->next)
+    for(;p!=NULL;p=p->sljedeci)
     {
         if(strcmp(p->racun.kupac,kupac)==0)
             br++;
@@ -108,31 +108,31 @@ int trazi_po_kupcu(NODE*head,char*kupac)
     return br;
 }
 
-int trazi_po_datumu(NODE*head, char*m)
+int traziPoDatumu(NODE*glava, char*datum)
 {
 	int broj = 0;
-	NODE *p = head;
+	NODE *p = glava;
 	if (p == NULL)
 		return 0;
-	for (; p; p = p->next)
+	for (; p; p = p->sljedeci)
 	{
-		if (p->racun.datum[3] == m[0] && p->racun.datum[4] == m[1])
+		if (p->racun.datum[3] == datum[0] && p->racun.datum[4] == datum[1])
 			broj++;
 	}
 	return broj;
 }
 
-void mjesec(NODE *head, char* m, int brojRacuna)
+void pregledMjeseca(NODE *glava, char* datum, int brojRacuna)
 {
 	RACUN *niz = (RACUN*)calloc(brojRacuna, sizeof(RACUN));
 	double ukupno = 0, pdv = 0;
 	int i = 0;
-	NODE *p = head;
+	NODE *p = glava;
 	if (p == NULL)
 		return;
-	for (; p; p = p->next)
+	for (; p; p = p->sljedeci)
 	{
-		if (p->racun.datum[3] == m[0] && p->racun.datum[4] == m[1])
+		if (p->racun.datum[3] == datum[0] && p->racun.datum[4] == datum[1])
 			niz[i++] = p->racun;
 	}
 	printf("---------------------------------------------------------------------------------------------------------------------\n");
@@ -141,7 +141,7 @@ void mjesec(NODE *head, char* m, int brojRacuna)
 	for (int i = 0; i < brojRacuna; i++)
 	{
 		for (int j = 0; j < niz[i].brojArtikala; j++)
-			printf("%s\t\t%s\t\t%s\t\t%d\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizA[j].naziv, niz[i].nizA[j].sifra, niz[i].nizA[j].cijena*niz[i].valuta.koeficijent,niz[i].valuta.oznaka, niz[i].nizA[j].kolicina, niz[i].nizA[j].ukupno*niz[i].valuta.koeficijent, niz[i].valuta.oznaka);
+			printf("%s\t\t%s\t\t%s\t\t%d\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizArtikala[j].naziv, niz[i].nizArtikala[j].sifra, niz[i].nizArtikala[j].cijena*niz[i].valuta.koeficijent,niz[i].valuta.oznaka, niz[i].nizArtikala[j].kolicina, niz[i].nizArtikala[j].ukupno*niz[i].valuta.koeficijent, niz[i].valuta.oznaka);
 		ukupno += niz[i].ukupno;
 		pdv += niz[i].pdv;
 
@@ -167,7 +167,7 @@ void ispisZaMjesec(RACUN *niz, int brojRacuna, double ukupno, double pdv)
 		for (int i = 0; i < brojRacuna; i++)
 		{
 			for (int j = 0; j < niz[i].brojArtikala; j++)
-				fprintf(file,"%s\t\t%s\t\t%s\t\t%d\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizA[j].naziv, niz[i].nizA[j].sifra, niz[i].nizA[j].cijena*niz[i].valuta.koeficijent, niz[i].valuta.oznaka, niz[i].nizA[j].kolicina, niz[i].nizA[j].ukupno*niz[i].valuta.koeficijent, niz[i].valuta.oznaka);
+				fprintf(file,"%s\t\t%s\t\t%s\t\t%d\t\t%.2lf %s\t%.2lf\t\t%.2lf %s\n", niz[i].datum, niz[i].kupac, niz[i].nizArtikala[j].naziv, niz[i].nizArtikala[j].sifra, niz[i].nizArtikala[j].cijena*niz[i].valuta.koeficijent, niz[i].valuta.oznaka, niz[i].nizArtikala[j].kolicina, niz[i].nizArtikala[j].ukupno*niz[i].valuta.koeficijent, niz[i].valuta.oznaka);
 			ukupno += niz[i].ukupno;
 			pdv += niz[i].pdv;
 
@@ -182,22 +182,22 @@ void ispisZaMjesec(RACUN *niz, int brojRacuna, double ukupno, double pdv)
 	else printf("Neusjesno otvaranej fajla!\n");
 }
 
-void insert(NODE** head, RACUN* racun)
+void dodajUListu(NODE** glava, RACUN* racun)
 {
-	NODE* newNode = (NODE*)malloc(sizeof(NODE));
-	newNode->racun = *racun;
-	newNode->next = 0;
-	if (*head != 0)
-		newNode->next = *head;
-	*head = newNode;
+	NODE* noviNode = (NODE*)malloc(sizeof(NODE));
+	noviNode->racun = *racun;
+	noviNode->sljedeci = 0;
+	if (*glava != 0)
+		noviNode->sljedeci = *glava;
+	*glava = noviNode;
 }
 
-void kupac(NODE* lista, char* kupac, int brojRacuna)
+void pregledKupca(NODE* lista, char* kupac, int brojRacuna)
 {
 	NODE* temp;
 	int i = 0, j, k;
 	RACUN* nizRacuna = (RACUN*)calloc(brojRacuna , sizeof(RACUN));
-	for (temp = lista; temp != NULL; temp = temp->next)
+	for (temp = lista; temp != NULL; temp = temp->sljedeci)
 	{
 		if (strcmp(temp->racun.kupac, kupac) == 0)
 			nizRacuna[i++] = temp->racun;
@@ -211,13 +211,13 @@ void kupac(NODE* lista, char* kupac, int brojRacuna)
 	{
 		for (k = 0; k<nizRacuna[j].brojArtikala; k++)
 		{
-			printf("%s\t\t%d\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", nizRacuna[j].nizA[k].naziv, nizRacuna[j].nizA[k].sifra, nizRacuna[j].nizA[k].cijena*nizRacuna[j].valuta.koeficijent,nizRacuna[j].valuta.oznaka, nizRacuna[j].nizA[k].kolicina, nizRacuna[j].nizA[k].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
+			printf("%s\t\t%d\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", nizRacuna[j].nizArtikala[k].naziv, nizRacuna[j].nizArtikala[k].sifra, nizRacuna[j].nizArtikala[k].cijena*nizRacuna[j].valuta.koeficijent,nizRacuna[j].valuta.oznaka, nizRacuna[j].nizArtikala[k].kolicina, nizRacuna[j].nizArtikala[k].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 		}
 		printf("-------------------------------------------------------------------------------------------------\n");
 		printf("Datum:%s", nizRacuna[j].datum);
 		printf(" Ukupno(racun): %.2lf %s", nizRacuna[j].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 		printf(" PDV: %.2lf %s", nizRacuna[j].pdv*nizRacuna[j].valuta.koeficijent,nizRacuna[j].valuta.oznaka);
-		printf(" Ukupno za placanje: %.2lf %s\n", nizRacuna[j].ukupnoPl*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
+		printf(" Ukupno za placanje: %.2lf %s\n", nizRacuna[j].ukupnoZaPlatiti*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 		printf("-------------------------------------------------------------------------------------------------\n");
 	}
 	ispisZaKupca(nizRacuna, brojRacuna);
@@ -238,13 +238,13 @@ void ispisZaKupca(RACUN *nizRacuna, int brojRacuna)
 		{
 			for (int k = 0; k < nizRacuna[j].brojArtikala; k++)
 			{
-				fprintf(fajl,"%s\t\t%d\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", nizRacuna[j].nizA[k].naziv, nizRacuna[j].nizA[k].sifra, nizRacuna[j].nizA[k].cijena*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka, nizRacuna[j].nizA[k].kolicina, nizRacuna[j].nizA[k].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
+				fprintf(fajl,"%s\t\t%d\t\t%.2lf %s\t\t%.2lf\t\t%.2lf %s\n", nizRacuna[j].nizArtikala[k].naziv, nizRacuna[j].nizArtikala[k].sifra, nizRacuna[j].nizArtikala[k].cijena*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka, nizRacuna[j].nizArtikala[k].kolicina, nizRacuna[j].nizArtikala[k].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 			}
 			fprintf(fajl,"-------------------------------------------------------------------------------------------------\n");
 			fprintf(fajl,"Datum:%s", nizRacuna[j].datum);
 			fprintf(fajl," Ukupno(racun): %.2lf %s", nizRacuna[j].ukupno*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 			fprintf(fajl," PDV: %.2lf %s", nizRacuna[j].pdv*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
-			fprintf(fajl," Ukupno za placanje: %.2lf %s\n", nizRacuna[j].ukupnoPl*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
+			fprintf(fajl," Ukupno za placanje: %.2lf %s\n", nizRacuna[j].ukupnoZaPlatiti*nizRacuna[j].valuta.koeficijent, nizRacuna[j].valuta.oznaka);
 			fprintf(fajl,"-------------------------------------------------------------------------------------------------\n");
 		}
 		fclose(fajl);

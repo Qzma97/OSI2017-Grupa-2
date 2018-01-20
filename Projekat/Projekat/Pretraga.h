@@ -4,34 +4,34 @@
 #include "Formati.h"
 
 //F-ja za ubacivanje racuna u jednostruko povezanu listu.
-void insert(NODE**, RACUN*);
+void dodajUListu(NODE**, RACUN*);
 
 //F-ja za brisanje liste.
-void brisi_listu(NODE**);
+void brisiListu(NODE**);
 
 //F-ja koja pretrazuje listu racuna po nazivu artikla.
-int trazi_po_artiklu(NODE*, char*);
+int traziPoArtiklu(NODE*, char*);
 
 //F-ja za pregled svih podataka za odredjeni proizvod.
-void artikal(NODE*, int, char*);
+void pregledArtikla(NODE*, int, char*);
 
 //F-ja za izvoz pregleda svih podataka za odredjeni proizvod
 void ispisZaArtikal(RACUN*, int, double, double,char*);
 
 //F-ja koja pretrazuje listu racuna po datumu.
-int trazi_po_datumu(NODE*, char*);
+int traziPoDatumu(NODE*, char*);
 
 //F-ja za pregled ukupne prodaje za odredjeni mjesec
-void mjesec(NODE*, char*, int);
+void pregledMjeseca(NODE*, char*, int);
 
 //F-ja za izvoz pregleda ukupne prodaje za odredjeni mjesec
 void ispisZaMjesec(RACUN*, int, double, double);
 
 //F-ja koja pretrazuje listu racuna po nazivu kupca.
-int trazi_po_kupcu(NODE*head, char*kupac);
+int traziPoKupcu(NODE*, char*);
 
 //F-ja  za pregled svih podataka za odredjenog kupca.
-void kupac(NODE*, char*, int);
+void pregledKupca(NODE*, char*, int);
 
 //F-ja za izvoz pregleda podataka za odredjenog kupca
 void ispisZaKupca(RACUN*, int);

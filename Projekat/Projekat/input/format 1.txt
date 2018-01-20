@@ -1,12 +1,12 @@
-Kupac: ABC
-Datum: 30/10/2017
+Kupac: Branko
+Datum: 01/12/2017
 
 	       Racun
 
 Proizvod - kolicina - cijena - ukupno
-abc 123  -    10    -    5   -   50
-abb 456  -    20    -   10   -   200
+Jabuke 12456  -    15    -    2.5   -   37.5
+Banane 456758  -    20    -   10   -   200
 ---------------------------------------
-Ukupno: 250
-PDV: 42.5
-Ukupno za placanje: 292.5 
+Ukupno: 237.5
+PDV: 40.37
+Ukupno za placanje: 277.87

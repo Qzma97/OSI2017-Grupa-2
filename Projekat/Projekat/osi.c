@@ -12,24 +12,24 @@
 
 int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 {
-	int check = 0;
+	int provjera = 0;
 	char ime[16], pin[5], pom[31] = { 0 };
 	printf("KORISNICKO IME:"); scanf("%s", ime);
 	printf("PIN:"); 
 	do { 
 		//Provjera da li je uneseni PIN broj ili je korisnik upisivao druge znakove.
 		//Radi sve dok korisnik ne unese tacan PIN.
-		if (check) {
+		if (provjera) {
 			printf("PIN smije samo cifre sadrzati!\n");
 			printf("Molim vas unesite ponovo vas PIN: ");
 		}
 		scanf("%s", pom);
 		strncpy(pin, pom, 5);
-		check++;
+		provjera++;
 	} while (pin[0] < 48 || pin[0]>57);
 	KORISNIK korisnik;
 	int ispravno=0,neispravno=0;//Broj ispravnih i neispravnih racuna koji ce se ucitati.
-	if ((search(nizNaloga, velicinaNiza, &korisnik, ime, pin)) == 1)
+	if ((pretragaKorisnickihPINova(nizNaloga, velicinaNiza, &korisnik, ime, pin)) == 1)
 	{
 		//Uspjesna prijava.
 		printf("USPJESNA PRIJAVA!\n");
@@ -43,7 +43,7 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 			WIN32_FIND_DATA findFileData;
 			HANDLE hFind;
 			FILE* f,*f1=0, *dat;
-			NODE* head=NULL;
+			NODE* glava=NULL;
 			RACUN racun;
 			int br = 0;
 			//Ukoliko imamo vec obradjenje racune, ucitavaju se. Ucitavanje obradjenih informacija iz fajla "racuni.txt" .
@@ -54,13 +54,13 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 				for (int i = 0; i < br; i++)
 				{
 					fscanf(dat, "%s %s %d\n", racun.datum, racun.kupac, &racun.brojArtikala);
-					racun.nizA = (ARTIKAL*)malloc(racun.brojArtikala * sizeof(ARTIKAL));
+					racun.nizArtikala = (ARTIKAL*)malloc(racun.brojArtikala * sizeof(ARTIKAL));
 					for (int j = 0; j < racun.brojArtikala; j++)
-						fscanf(dat, "%s %d %lf %lf %lf\n", racun.nizA[j].naziv, &racun.nizA[j].sifra, &racun.nizA[j].cijena, &racun.nizA[j].kolicina, &racun.nizA[j].ukupno);
-					fscanf(dat, "%lf %lf %lf %lf %s\n", &racun.ukupno, &racun.pdv, &racun.ukupnoPl,&racun.valuta.koeficijent,racun.valuta.oznaka);
+						fscanf(dat, "%s %d %lf %lf %lf\n", racun.nizArtikala[j].naziv, &racun.nizArtikala[j].sifra, &racun.nizArtikala[j].cijena, &racun.nizArtikala[j].kolicina, &racun.nizArtikala[j].ukupno);
+					fscanf(dat, "%lf %lf %lf %lf %s\n", &racun.ukupno, &racun.pdv, &racun.ukupnoZaPlatiti,&racun.valuta.koeficijent,racun.valuta.oznaka);
 					racun.valuta.koeficijent = val.koeficijent;
 					strcpy(racun.valuta.oznaka, val.oznaka);
-					insert(&head, &racun);
+					dodajUListu(&glava, &racun);
 					fseek(dat, 77, SEEK_CUR);
 				}
 				fclose(dat);
@@ -95,15 +95,15 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 						switch (format)
 						{
 						case 1:
-							racun=format1(f, putanja);//Obrada racuna koji su formata 1.
+							racun=ucitajPodatkeZaFormat1(f, putanja);//Obrada racuna koji su formata 1.
 							if (verifikacija(&racun))// Verifikacija ispravnosti racuna.
 							{
 								//Ispravan racun.
 								//Kopiranje fajla iz input foldera u memory folder.
 								racun.valuta.koeficijent = val.koeficijent;
 								strcpy(racun.valuta.oznaka, val.oznaka);
-								insert(&head, &racun);
-								memory(f, putanja, findFileData.cFileName);
+								dodajUListu(&glava, &racun);
+								cuvajUMemory(f, putanja, findFileData.cFileName);
 								ispravno++;
 							}
 							else
@@ -111,19 +111,19 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								//Neispravan racun.
 								//Kopiranje fajla iz input foldera u error folder.
 								neispravno++;
-								error(f, putanja, findFileData.cFileName);
+								cuvajUError(f, putanja, findFileData.cFileName);
 							}
 							break;
 						case 2:
-							racun = format2(f, putanja);//Obrada racuna koji su formata 2.
+							racun = ucitajPodatkeZaFormat2(f, putanja);//Obrada racuna koji su formata 2.
 							if (verifikacija(&racun))// Verifikacija ispravnosti racuna.
 							{
 								//Ispravan racun.
 								//Kopiranje fajla iz input foldera u memory folder.
 								racun.valuta.koeficijent = val.koeficijent;
 								strcpy(racun.valuta.oznaka, val.oznaka);
-								insert(&head, &racun);
-								memory(f, putanja, findFileData.cFileName);
+								dodajUListu(&glava, &racun);
+								cuvajUMemory(f, putanja, findFileData.cFileName);
 								ispravno++;
 							}
 							else
@@ -131,19 +131,19 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								//Neispravan racun.
 								//Kopiranje fajla iz input foldera u error folder.
 								neispravno++;
-								error(f, putanja, findFileData.cFileName);
+								cuvajUError(f, putanja, findFileData.cFileName);
 							}
 							break;
 						case 3:
-							racun = format3(f, putanja);//Obrada racuna koji su formata 3.
+							racun = ucitajPodatkeZaFormat3(f, putanja);//Obrada racuna koji su formata 3.
 							if (verifikacija(&racun))// Verifikacija ispravnosti racuna.
 							{
 								//Ispravan racun.
 								//Kopiranje fajla iz input foldera u memory folder.
 								racun.valuta.koeficijent = val.koeficijent;
 								strcpy(racun.valuta.oznaka, val.oznaka);
-								insert(&head, &racun);
-								memory(f, putanja, findFileData.cFileName);
+								dodajUListu(&glava, &racun);
+								cuvajUMemory(f, putanja, findFileData.cFileName);
 								ispravno++;
 							}
 							else
@@ -151,19 +151,19 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								//Neispravan racun.
 								//Kopiranje fajla iz input foldera u error folder.
 								neispravno++;
-								error(f, putanja, findFileData.cFileName);
+								cuvajUError(f, putanja, findFileData.cFileName);
 							}
 							break;
 						case 4:
-							racun=format4(f,putanja);//Obrada racuna koji su formata 1.
+							racun=ucitajPodatkeZaFormat4(f,putanja);//Obrada racuna koji su formata 1.
 							if (verifikacija(&racun))// Verifikacija ispravnosti racuna.
 							{
 								//Ispravan racun.
 								//Kopiranje fajla iz input foldera u memory folder.
 								racun.valuta.koeficijent = val.koeficijent;
 								strcpy(racun.valuta.oznaka, val.oznaka);
-								insert(&head, &racun);
-								memory(f, putanja, findFileData.cFileName);
+								dodajUListu(&glava, &racun);
+								cuvajUMemory(f, putanja, findFileData.cFileName);
 								ispravno++;
 							}
 							else
@@ -171,11 +171,11 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								//Neispravan racun.
 								//Kopiranje fajla iz input foldera u error folder.
 								neispravno++;
-								error(f, putanja, findFileData.cFileName);
+								cuvajUError(f, putanja, findFileData.cFileName);
 							}
 							break;
 						case 5:
-							racun = format5(f, putanja, findFileData.cFileName);//Obrada racuna koji su formata 5.
+							racun = ucitajPodatkeZaFormat5(f, putanja, findFileData.cFileName);//Obrada racuna koji su formata 5.
 							if (verifikacija(&racun))// Verifikacija ispravnosti racuna.
 							{
 								//Ispravan racun.
@@ -183,8 +183,8 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								racun.valuta.koeficijent = val.koeficijent;
 								strcpy(racun.valuta.oznaka, val.oznaka);
 								f = fopen(putanja, "r");
-								insert(&head, &racun);
-								memory(f, putanja, findFileData.cFileName);
+								dodajUListu(&glava, &racun);
+								cuvajUMemory(f, putanja, findFileData.cFileName);
 								ispravno++;
 							}
 							else
@@ -193,7 +193,7 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								//Kopiranje fajla iz input foldera u error folder.
 								f = fopen(putanja, "r");
 								neispravno++;
-								error(f, putanja, findFileData.cFileName);
+								cuvajUError(f, putanja, findFileData.cFileName);
 							}
 							break;
 						}
@@ -207,22 +207,22 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 			if (dat = fopen("racuni.txt", "w"))
 			{
 				fprintf(dat, "Broj racuna:%d\n", br + ispravno);
-				for (NODE *temp = head; temp; temp = temp->next)
+				for (NODE *privremeni = glava; privremeni; privremeni = privremeni->sljedeci)
 				{
-					fprintf(dat, "%s %s %d\n", temp->racun.datum, temp->racun.kupac, temp->racun.brojArtikala);
-					for (int i = 0; i < temp->racun.brojArtikala; i++)
+					fprintf(dat, "%s %s %d\n", privremeni->racun.datum, privremeni->racun.kupac, privremeni->racun.brojArtikala);
+					for (int i = 0; i < privremeni->racun.brojArtikala; i++)
 					{
-						fprintf(dat, "%s %d %.2lf %.2lf %.2lf\n", temp->racun.nizA[i].naziv, temp->racun.nizA[i].sifra, temp->racun.nizA[i].cijena, temp->racun.nizA[i].kolicina, temp->racun.nizA[i].ukupno);
+						fprintf(dat, "%s %d %.2lf %.2lf %.2lf\n", privremeni->racun.nizArtikala[i].naziv, privremeni->racun.nizArtikala[i].sifra, privremeni->racun.nizArtikala[i].cijena, privremeni->racun.nizArtikala[i].kolicina, privremeni->racun.nizArtikala[i].ukupno);
 
 					}
-					fprintf(dat, "%.2lf %.2lf %.2lf %.2lf %s\n", temp->racun.ukupno, temp->racun.pdv, temp->racun.ukupnoPl,temp->racun.valuta.koeficijent,temp->racun.valuta.oznaka);
+					fprintf(dat, "%.2lf %.2lf %.2lf %.2lf %s\n", privremeni->racun.ukupno, privremeni->racun.pdv, privremeni->racun.ukupnoZaPlatiti,privremeni->racun.valuta.koeficijent,privremeni->racun.valuta.oznaka);
 					fprintf(dat, "___________________________________________________________________________\n");
 				}
 				fclose(dat);
 			}
 			printf("Broj novih ispravnih racuna: %d\n", ispravno);//Ispis broja ispravnih racuna koji su obradjeni u ovom pokretanju programa,
 			printf("Broj novih neispravnih racuna: %d\n", neispravno);//Ispis broja neispravnih racuna koji su obradjeni u ovom pokretanju programa,
-			int found;
+			int pronadjen;
 			char unos[20],pom[31] = { 0 };// pom - pomocna promjenljiva za upis naziva artikla,mjeseca ili  kupca.
 			do {
 				//Meni sa opcijama za analiticara.
@@ -236,50 +236,50 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 				printf("-------------------------------------------------------------------------------------------------\n");
 				scanf("%s", unos);//Izbor opcije.
 				system("cls");
-				if (unos[0] == '1')
+				if (unos[0] == '1'&& strlen(unos) == 1)
 				{
 					//Pregled svih podataka za odredjenog kupca.
 					printf("Unesite naziv trazenog kupca: ");
 					scanf("%s", pom);
-					if (found = trazi_po_kupcu(head, pom))
+					if (pronadjen = traziPoKupcu(glava, pom))
 					{
-						kupac(head, pom, found);
+						pregledKupca(glava, pom, pronadjen);
 					}
 					else
 						printf("Nema trazenog kupca!\n");
 				}
-				else if (unos[0] == '2')
+				else if (unos[0] == '2'&& strlen(unos) == 1)
 				{
 					//Pregled svih podataka za odredjeni proizvod.
 					printf("Unesite trazeni proizvod: ");
 					scanf("%s", pom);
-					if (found = trazi_po_artiklu(head, pom))
+					if (pronadjen = traziPoArtiklu(glava, pom))
 					{
-						artikal(head, found, pom);
+						pregledArtikla(glava, pronadjen, pom);
 					}
 					else
 						printf("Nema trazenog artikla!\n");
 				}
-				else if (unos[0] == '3')
+				else if (unos[0] == '3'&& strlen(unos) == 1)
 				{
 					//Pregled ukupne prodaje za odredjeni mjesec.
 					printf("Pregled ukupne prodaje za mjesec(2 cifre):");
 					scanf("%s", pom);
-					int broj = trazi_po_datumu(head, pom);
+					int broj = traziPoDatumu(glava, pom);
 					if (broj == 0)
 						printf("Nema podataka za taj mjesec!\n");
 					else
-						mjesec(head, pom, broj);
+						pregledMjeseca(glava, pom, broj);
 				}
 				
 			} while (unos[0] != '0');
-			brisi_listu(&head);
+			brisiListu(&glava);
 		}
 		//Tip korisnika Administrator.
 		else if (korisnik.tip == 1)
 		{
-			CVOR* lista_naloga = ucitaj_naloge_iz_fajla(); //Ucitavanje liste korisnic
-			char unos[20], helper1[21] = { 0 }, helper2[21] = { 0 };
+			CVOR* lista_naloga = ucitajNalogeIzFajla(); //Ucitavanje liste korisnic
+			char unos[20], pom1[21] = { 0 }, pom2[21] = { 0 };
 			do
 			{
 				//Meni sa opcijama za Administratora.
@@ -294,20 +294,20 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 				printf("-----------------------------------------------------------------------------------------------------------------------\n");
 				scanf("%s", unos);//Izbor opcije.
 				system("cls");
-				if (unos[0] == '1')
+				if (unos[0] == '1'&& strlen(unos) == 1)
 				{
 					//Podesavanja valute.
 					izborValute();
 				}
-				else if (unos[0] == '2')
+				else if (unos[0] == '2'&& strlen(unos) == 1)
 				{
 					//Formatirani ispis liste korisnickih naloga.
-					ispis_korisnika(lista_naloga);
+					ispisKorisnika(lista_naloga);
 				}
-				else if (unos[0] == '3')
+				else if (unos[0] == '3'&& strlen(unos) == 1)
 				{
 					//Promjena tipa korisnickog naloga.
-					int redniBrojNaloga, tipNaloga, provjera = 0,vel=listSize(lista_naloga);
+					int redniBrojNaloga, tipNaloga, provjera = 0,vel=vratiVelicinuListe(lista_naloga);
 					printf("Moguci korisnicki tipovi su:\n [1] Admin\n [0] Analiticar\n");
 					printf("Unesite redni broj korisnickog naloga i u koji tip mijenjate dati nalog (2 broja sa razmakom izmedju): ");
 					do
@@ -323,41 +323,41 @@ int prijava(KORISNIK* nizNaloga, int velicinaNiza)
 								printf("Nisu dozvoljeni drugi simboli osim brojeva!\n");
 								printf("Ponovite unos: ");
 							}
-							scanf("%s %s", helper1, helper2);
+							scanf("%s %s", pom1, pom2);
 							check = 1;
-						} while ((helper1[0] < 48 || helper2[0]>57) || (helper2[0] < 48 || helper2[0]>57));
-						redniBrojNaloga = helper1[0] - 49;
-						tipNaloga = helper2[0] - 48;
+						} while ((pom1[0] < 48 || pom2[0]>57) || (pom2[0] < 48 || pom2[0]>57));
+						redniBrojNaloga = pom1[0] - 49;
+						tipNaloga = pom2[0] - 48;
 						provjera=1;
 					} while (((tipNaloga != 0) && (tipNaloga != 1))||((redniBrojNaloga<0)||(redniBrojNaloga>=vel)));
 					promjenaTipa(redniBrojNaloga, tipNaloga, &lista_naloga);
 				}
-				else if (unos[0] == '4')
+				else if (unos[0] == '4'&& strlen(unos)==1)
 				{
 					//Brisanje korisnickog naloga
-					int redniBrojNaloga, provjera = 0, velicinaListe = listSize(lista_naloga);
+					int redniBrojNaloga, provjera = 0, velicinaListe = vratiVelicinuListe(lista_naloga);
 					printf("Unesite redni broj korisnickog naloga koji zelite obrisati: ");
 					do
 					{
-						char helper[21] = { 0 };
+						char pomocna[21] = { 0 };
 						if (provjera)
 						{
 							printf("Ukucali ste nepostojeci redni broj ili ste ukucali neki drugi znak koji nije broj!\n");
 						}
-						scanf("%s", helper);
-						redniBrojNaloga = helper[0] - 49;
+						scanf("%s", pomocna);
+						redniBrojNaloga = pomocna[0] - 49;
 						provjera=1;
 					} while ((redniBrojNaloga<0) || (redniBrojNaloga>=velicinaListe));
-					deleteNode(&lista_naloga, redniBrojNaloga);
+					izbrisiCvor(&lista_naloga, redniBrojNaloga);
 				}
 			} while (unos[0] != '0');	
 			FILE* f = fopen("korisnici.dat", "wb");
 			while (lista_naloga)//Cuvanje izmjena korisnickih naloga i oslobadjanje memorije.
 			{
-				CVOR* temp = lista_naloga;
+				CVOR* privremeni = lista_naloga;
 				lista_naloga = lista_naloga->sljedeci;
-				fwrite(&temp->k, sizeof(KORISNIK), 1, f);
-				free(temp);
+				fwrite(&privremeni->korisnik, sizeof(KORISNIK), 1, f);
+				free(privremeni);
 			}
 			fclose(f);
 		}
@@ -384,7 +384,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 		//Unos korisnickog imena i provjera da li je vec ime u upotrebi.
 		printf("\tKorisnicko ime (bez upotrebe razmaka):");
 		scanf("%s", pom1);
-		i = search_(niz, n, pom1);
+		i = pretragaKorisnikaPoImenu(niz, n, pom1);
 		if (i == 1)
 			printf("Korisnik sa tim imenom vec postoji.\n");
 	} while (i == 1);
@@ -415,7 +415,7 @@ void registracija(KORISNIK* niz, int n, FILE *f)
 	prijava(niz, n);//Pokretanje prijave.
 }
 
-int search(KORISNIK* niz, int n, KORISNIK *k, char *ime, char *pin)
+int pretragaKorisnickihPINova(KORISNIK* niz, int n, KORISNIK *k, char *ime, char *pin)
 {
     int i;
 	for ( i = 0; i < n; i++)
@@ -430,7 +430,7 @@ int search(KORISNIK* niz, int n, KORISNIK *k, char *ime, char *pin)
 
 }
 
-int search_(KORISNIK* niz, int n, char* ime)
+int pretragaKorisnikaPoImenu(KORISNIK* niz, int n, char* ime)
 {
     int i;
 	for ( i = 0; i < n; i++)

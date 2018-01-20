@@ -3,15 +3,15 @@ Poslovnica: ETF
 
 	Maloprodajni racun
 
-Kupac: ABC
+Kupac: Janko
 
 Proizvod - kolicina - cijena - ukupno
 ---------------------------------------
-abc 123  -    10    -    5   -   50
-abb 456  -    20    -   10   -   200
+Hljeb 124323  -    10    -    1.5   -   15
+Burek 456799  -    20    -   2   -   40
 ---------------------------------------
 
-Ukupno: 250
-PDV: 42.5
-Ukupno za placanje: 292.5 
-Datum: 24/09/2017
+Ukupno: 55
+PDV: 9.35
+Ukupno za placanje: 64.35 
+Datum: 24/08/2017

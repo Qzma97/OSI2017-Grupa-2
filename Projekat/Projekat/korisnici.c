@@ -10,14 +10,14 @@ void promjenaTipa(int pozicija, int tip, CVOR** glava)
 		temp = temp->sljedeci;
 		i++;
 	}
-	temp->k.tip = tip;
+	temp->korisnik.tip = tip;
 }
 
-CVOR* ucitaj_naloge_iz_fajla()
+CVOR* ucitajNalogeIzFajla()
 {
     FILE* dat;
     KORISNIK k;
-    CVOR* head=0;
+    CVOR* glava=0;
     int p;
     if((dat=fopen("korisnici.dat", "rb")) != NULL)
     {
@@ -26,20 +26,20 @@ CVOR* ucitaj_naloge_iz_fajla()
            p=(fread(&k, sizeof(KORISNIK), 1, dat));
            if(p)
            {
-               if(head==0)
+               if(glava==0)
                {
                    CVOR* novi=(CVOR*)malloc(sizeof(CVOR));
-                   novi->k=k;
+                   novi->korisnik=k;
                    novi->sljedeci=0;
-                   head=novi;
+                   glava=novi;
                }
                else
                 {
-                    CVOR* temp;
+                    CVOR* privremeni;
                     CVOR* novi=(CVOR*)malloc(sizeof(CVOR));
-                    for(temp=head; temp->sljedeci != 0; temp=temp->sljedeci);
-                    temp->sljedeci=novi;
-                    novi->k=k;
+                    for(privremeni=glava; privremeni->sljedeci != 0; privremeni=privremeni->sljedeci);
+                    privremeni->sljedeci=novi;
+                    novi->korisnik=k;
                     novi->sljedeci=0;
                 }
            }
@@ -48,61 +48,61 @@ CVOR* ucitaj_naloge_iz_fajla()
     }
      else
         printf("Greska prilikom otvaranja datoteke.\n");
-    return head;
+    return glava;
 }
 
-void deleteNode(CVOR**head_ref, int position)
+void izbrisiCvor(CVOR**glava, int pozicija)
 {
 	
-		if (*head_ref == NULL)
+		if (*glava == NULL)
 		 return;
 	
 		
-		CVOR* temp = *head_ref;
+		CVOR* privremeni = *glava;
 	
 		
-		if (position == 0)
+		if (pozicija == 0)
 		 {
-		*head_ref = temp->sljedeci;
-		free(temp);
+		*glava = privremeni->sljedeci;
+		free(privremeni);
 		return;
 		}
 	
 		
-		for (int i = 0; temp != NULL && i < position - 1; i++)
-		 temp = temp->sljedeci;
+		for (int i = 0; privremeni != NULL && i < pozicija - 1; i++)
+		 privremeni = privremeni->sljedeci;
 		
-		if (temp == NULL || temp->sljedeci == NULL)
+		if (privremeni == NULL || privremeni->sljedeci == NULL)
 		 return;
-		CVOR *next = temp->sljedeci->sljedeci;
+		CVOR *naredni = privremeni->sljedeci->sljedeci;
 	
-		free(temp->sljedeci);
+		free(privremeni->sljedeci);
 	
-		temp->sljedeci = next;
+		privremeni->sljedeci = naredni;
 	}
 
-int listSize(CVOR *head)
+int vratiVelicinuListe(CVOR *glava)
 {
-	int size = 0;
-	while (head)
+	int velicinaListe = 0;
+	while (glava)
 	{
-		head = head->sljedeci;
-		size++;
+		glava = glava->sljedeci;
+		velicinaListe++;
 	}
-	return size;
+	return velicinaListe;
 }
 
-void ispis_korisnika(CVOR *glava)
+void ispisKorisnika(CVOR *glava)
 {
 	int rb = 1;
 	printf("RB. KORISNICKI NALOG\tIME\t\tPREZIME\t\t\tTIP KORISNIKA\t\tEMAIL\n");
 	printf("-----------------------------------------------------------------------------------------------------------------------\n");
 	while (glava)
 	{
-		printf("%d.  %-s\t\t%-s\t\t%-s\t\t", rb++, glava->k.korisnicko_ime, glava->k.ime, glava->k.prezime);
-		if ((glava->k.tip) == 0) printf("Analiticar\t\t");
-		if ((glava->k.tip) == 1) printf("Admin     \t\t");
-		printf("%s\n", glava->k.email);
+		printf("%d.  %-s\t\t%-s\t\t%-s\t\t", rb++, glava->korisnik.korisnicko_ime, glava->korisnik.ime, glava->korisnik.prezime);
+		if ((glava->korisnik.tip) == 0) printf("Analiticar\t\t");
+		if ((glava->korisnik.tip) == 1) printf("Admin     \t\t");
+		printf("%s\n", glava->korisnik.email);
 		glava = glava->sljedeci;
 	}
 }

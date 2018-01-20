@@ -3,19 +3,19 @@
 #include <stdlib.h>
 #include "osi.h"
 
-typedef struct cvor { KORISNIK k; struct cvor *sljedeci; } CVOR;
+typedef struct cvor { KORISNIK korisnik; struct cvor *sljedeci; } CVOR;
 
 //F-ja koja vraca broj cvorova(velicinu) liste.
-int listSize(CVOR*);
+int vratiVelicinuListe(CVOR*);
 
 //F-ja koja formatirano ispisuje listu naloga.
-void ispis_korisnika(CVOR *glava);
+void ispisKorisnika(CVOR *glava);
 
 //F-ja za brisanje cvorova liste.
-void deleteNode(CVOR **, int );
+void izbrisiCvor(CVOR **, int );
 
 //F-ja za promjenu tipa korisnika.
 void promjenaTipa(int, int, CVOR**);
 
 //F-ja za ucitavanje naloga iz fajla i smjesta ih u listu. Vraca pokazivac na prvi cvor.
-CVOR* ucitaj_naloge_iz_fajla();
+CVOR* ucitajNalogeIzFajla();

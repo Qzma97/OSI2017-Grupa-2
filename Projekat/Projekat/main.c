@@ -12,16 +12,16 @@ int main()
 	Sleep(3000);		//Program se zaustavlja 3 sekunde
 	system("cls");		//Brisanje prethodnog ispisanog sadrzaja na ekranu
 	FILE *dat;
-	int defaultSize = 10, indexNaloga = 0;
-	KORISNIK *nizNaloga = (KORISNIK*)malloc(defaultSize * sizeof(KORISNIK));  //Ucitavanje korisnickih naloga
+	int defaultVelicina = 10, indexNaloga = 0;
+	KORISNIK *nizNaloga = (KORISNIK*)malloc(defaultVelicina * sizeof(KORISNIK));  //Ucitavanje korisnickih naloga
 	if ((dat = fopen("korisnici.dat", "rb")) != NULL)
 	{
 		int pom;
 		KORISNIK  temp;
 		do {
 			if ((pom = fread(&temp, sizeof(KORISNIK), 1, dat) == 1))
-				if (indexNaloga == defaultSize)
-					nizNaloga = (KORISNIK*)realloc(nizNaloga, (defaultSize *= 2) * sizeof(KORISNIK));
+				if (indexNaloga == defaultVelicina)
+					nizNaloga = (KORISNIK*)realloc(nizNaloga, (defaultVelicina *= 2) * sizeof(KORISNIK));
 			nizNaloga[indexNaloga++] = temp;
 		} while (pom);
 		indexNaloga--;
@@ -32,7 +32,7 @@ int main()
 		printf("REGISTRACIJA-2\n");
 		printf("-------------------------------------------------------------------------------------------------\n");
 		char izborOpcije[100];
-		int returnValue = 0;
+		int povratnaVrijednost = 0;
 		//Izbor opcije sve dok korisnik ne izabere jednu od opcija
 		do
 		{
@@ -42,8 +42,8 @@ int main()
 		} while (strcmp(izborOpcije,"1") && strcmp(izborOpcije, "2"));
 		if (!strcmp(izborOpcije, "1"))
 			do {
-				returnValue = prijava(nizNaloga, indexNaloga); //Prijava za postojece korisnike
-			} while (returnValue == 0);
+				povratnaVrijednost = prijava(nizNaloga, indexNaloga); //Prijava za postojece korisnike
+			} while (povratnaVrijednost == 0);
 
 		else if (!strcmp(izborOpcije,"2"))
 			registracija(nizNaloga, indexNaloga, dat); //Registracija novih korisnika
